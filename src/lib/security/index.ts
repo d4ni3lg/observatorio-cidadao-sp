@@ -108,3 +108,38 @@ export function checkRateLimit(
     resetAt: existing.resetAt,
   };
 }
+
+/**
+ * Autenticação Administrativa e Tokens de Sessão com HMAC
+ */
+const ADMIN_SECRET = process.env.ADMIN_SECRET || "farol-sp-admin-session-secret-2026";
+
+export function createAdminSessionToken(): string {
+  const expiresAt = Date.now() + 8 * 60 * 60 * 1000; // 8 horas
+  const payload = `admin:${expiresAt}`;
+  const signature = crypto
+    .createHmac("sha256", ADMIN_SECRET)
+    .update(payload)
+    .digest("hex");
+  return `${payload}:${signature}`;
+}
+
+export function verifyAdminSessionToken(token: string | null | undefined): boolean {
+  if (!token) return false;
+  const parts = token.split(":");
+  if (parts.length !== 3) return false;
+
+  const [user, expiresAtStr, signature] = parts;
+  if (user !== "admin") return false;
+
+  const expiresAt = parseInt(expiresAtStr, 10);
+  if (isNaN(expiresAt) || Date.now() > expiresAt) return false;
+
+  const expectedPayload = `${user}:${expiresAtStr}`;
+  const expectedSignature = crypto
+    .createHmac("sha256", ADMIN_SECRET)
+    .update(expectedPayload)
+    .digest("hex");
+
+  return timingSafeStringCompare(signature, expectedSignature);
+}

@@ -7,6 +7,30 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.4.0] - 2026-11-21
+
+### 🔐 Versão Definitiva para Apresentação & Autenticação do Painel Administrativo
+
+#### 🛡️ Portal e Autenticação do Painel Administrativo (`/admin`)
+- **Autenticação Segura com Usuário e Senha (`/api/admin/auth`)**:
+  - Implementação de login com credenciais institucionais: `admin` / `Farol@SP2026!`.
+  - Token de sessão assinado com HMAC-SHA256 e transmitido via cookie seguro `HttpOnly` com validade de 8 horas.
+  - Blindagem contra força bruta (Rate Limiting de 5 tentativas por minuto) e comparação de senha em tempo constante (*timing-safe*).
+  - Botão de conveniência para preenchimento de teste rápido em apresentações e demonstrações ao vivo.
+- **Painel de Controle e Auditoria Master**:
+  - Monitoramento das 5 fontes primárias (PNCP, Dados Abertos SP, TCM-SP, Transparência Municipal, CEIS/CNEP).
+  - Botão de disparo de sincronização oficial em tempo real com o banco de dados Supabase.
+  - Fila de moderação com ações de Aprovar/Rejeitar relatos com justificativa gravada.
+  - Trilha de auditoria imutável com carimbo de data/hora (*timestamp*), autor, ação e botão de exportação em JSON.
+
+#### 🎯 Refinamento Geral da Apresentação
+- **Fechamento Completo da Plataforma**:
+  - 19 rotas compiladas e validadas em produção.
+  - Logotipo e Favicon oficial do **Farol Cidadão da Transparência** ativo em todas as telas.
+  - Barra de navegação inferior mobile ativa e ágil para qualquer smartphone.
+
+---
+
 ## [1.3.1] - 2026-11-21
 
 ### 🏮 Redesign do Logotipo Oficial: Farol Cidadão da Transparência
