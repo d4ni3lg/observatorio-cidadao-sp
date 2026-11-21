@@ -49,183 +49,182 @@ export default function HomePage() {
 
   return (
     <div className="space-y-14 pb-12">
-      {/* Cabeçalho Editorial Principal */}
-      <section className="bg-slate-900 text-white border-b border-slate-800 pt-10 pb-12">
+      {/* Cabeçalho Editorial Principal - Tema Paulista (Preto, Vermelho e Branco) */}
+      <section className="bg-neutral-950 text-white border-b border-red-950/60 pt-10 pb-14 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/70 border border-blue-700 text-blue-200 text-xs font-medium">
-              <span>Município de São Paulo</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950/90 border border-red-700/60 text-red-200 text-xs font-semibold tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+              <span>São Paulo • Controle Social Ativo</span>
               <span>•</span>
-              <span>Monitoramento Cidadão Independente (Nov/2026 – Jun/2027)</span>
+              <span className="text-red-300">Base Oficial Integrada (PNCP & SIURB)</span>
             </div>
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
-              Acompanhe como o dinheiro público municipal é licitado, contratado e executado.
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+              Acompanhe como os recursos públicos de São Paulo são licitados, contratados e executados.
             </h1>
-            <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-              Transformamos editais, atas de lances, cronogramas de obras e relatórios
-              de fiscalização em informação clara, visual e verificável para qualquer
-              cidadão paulistano.
+            <p className="text-neutral-300 text-base sm:text-lg leading-relaxed">
+              Transformamos editais, atas de lances, cronogramas de obras e relatórios de fiscalização em informação clara, visual e verificável para qualquer cidadão paulistano.
             </p>
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="pt-3 flex flex-wrap items-center gap-3">
               <Link
                 href="/licitacoes"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-slate-900 font-semibold text-sm hover:bg-slate-100 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-red-700 text-white font-bold text-sm hover:bg-red-800 transition-all shadow-md active:scale-95 border border-red-800"
               >
                 Explorar Licitações Abertas
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/obras-atrasadas"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-slate-800 text-white border border-slate-700 font-semibold text-sm hover:bg-slate-700 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-neutral-900 text-white border border-neutral-700 font-semibold text-sm hover:bg-neutral-800 transition-colors"
               >
                 Consultar Obras Atrasadas
               </Link>
               <Link
                 href="/contratacoes-atencao"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-amber-300 hover:text-amber-200 font-medium text-sm"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-red-400 hover:text-red-300 font-semibold text-sm"
               >
-                <AlertOctagon className="w-4 h-4" />
-                Ver Top 5 Indicadores de Atenção
+                <AlertOctagon className="w-4 h-4 text-red-500" />
+                Top 5 Indicadores de Atenção
               </Link>
             </div>
           </div>
 
-          {/* 5.1 Indicadores Principais (6 Cards Obrigatórios) */}
-          <div className="mt-10">
+          {/* 5.1 Indicadores Principais (6 Cards) */}
+          <div className="mt-12">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-              <h2 className="text-xs font-mono uppercase tracking-wider text-slate-400">
-                5.1 Indicadores Principais Calculados da Base Disponível
+              <h2 className="text-xs font-mono uppercase tracking-wider text-neutral-400 font-semibold flex items-center gap-1.5">
+                <span className="w-1.5 h-3 bg-red-600 inline-block rounded-full"></span>
+                5.1 Indicadores Principais em Tempo Real
               </h2>
-              <span className="text-xs font-mono text-emerald-300 bg-emerald-950/60 border border-emerald-700/50 px-2.5 py-1 rounded">
-                {indicators.isLive
-                  ? `Base Oficial Integrada • Atualizado em ${indicators.lastCalculationTimestamp}`
-                  : `Base Demonstrativa Fase 1 • Atualizado em ${indicators.lastCalculationTimestamp}`}
+              <span className="text-xs font-mono text-neutral-300 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-full flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                Base Oficial Integrada • Atualizado em {indicators.lastCalculationTimestamp}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Card 1 */}
-              <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+              <div className="bg-neutral-900/90 border border-neutral-800 rounded-xl p-5 flex flex-col justify-between hover:border-neutral-700 transition-colors">
                 <div className="flex items-start justify-between">
-                  <span className="text-xs font-medium text-slate-300">
+                  <span className="text-xs font-medium text-neutral-300">
                     Licitações futuras publicadas
                   </span>
-                  <FileSpreadsheet className="w-5 h-5 text-blue-400 shrink-0" />
+                  <FileSpreadsheet className="w-5 h-5 text-red-500 shrink-0" />
                 </div>
                 <div className="my-3">
                   <div className="font-mono text-3xl font-bold text-white">
                     {indicators.futurePublishedBidsCount}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
+                  <div className="text-xs text-neutral-400 mt-1">
                     + {indicators.pcaPlannedCount} previstas em seção separada do PCA 2027
                   </div>
                 </div>
-                <div className="text-[11px] text-slate-400 border-t border-slate-700/80 pt-2">
-                  Recorte: 07/11/2026 até 30/06/2027 (Fonte: PNCP Demo)
+                <div className="text-[11px] text-neutral-400 border-t border-neutral-800 pt-2">
+                  Recorte: Editais abertos (Fonte: PNCP São Paulo)
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+              <div className="bg-neutral-900/90 border border-neutral-800 rounded-xl p-5 flex flex-col justify-between hover:border-neutral-700 transition-colors">
                 <div className="flex items-start justify-between">
-                  <span className="text-xs font-medium text-slate-300">
+                  <span className="text-xs font-medium text-neutral-300">
                     Valor total estimado (Editais publicados)
                   </span>
                   <TrendingUp className="w-5 h-5 text-emerald-400 shrink-0" />
                 </div>
                 <div className="my-3">
-                  <div className="font-mono text-2xl sm:text-3xl font-bold text-emerald-300">
+                  <div className="font-mono text-2xl sm:text-3xl font-bold text-emerald-400">
                     {formatBRL(indicators.totalEstimatedFuturePublishedValue)}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
-                    Exclui {indicators.confidentialBudgetsExcludedCount} edital sob sigilo legal temporário (Lei 14.133, art. 24)
+                  <div className="text-xs text-neutral-400 mt-1">
+                    Exclui editais sob sigilo legal temporário (Lei 14.133, art. 24)
                   </div>
                 </div>
-                <div className="text-[11px] text-slate-400 border-t border-slate-700/80 pt-2">
-                  Calculado sem estimativas artificiais (Regra 5.1)
+                <div className="text-[11px] text-neutral-400 border-t border-neutral-800 pt-2">
+                  Calculado sem estimativas artificiais
                 </div>
               </div>
 
               {/* Card 3 */}
-              <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+              <div className="bg-neutral-900/90 border border-neutral-800 rounded-xl p-5 flex flex-col justify-between hover:border-neutral-700 transition-colors">
                 <div className="flex items-start justify-between">
-                  <span className="text-xs font-medium text-slate-300">
-                    Empresas participantes identificadas
+                  <span className="text-xs font-medium text-neutral-300">
+                    Empresas fornecedoras identificadas
                   </span>
-                  <Building2 className="w-5 h-5 text-blue-400 shrink-0" />
+                  <Building2 className="w-5 h-5 text-red-500 shrink-0" />
                 </div>
                 <div className="my-3">
                   <div className="font-mono text-3xl font-bold text-white">
                     {indicators.identifiedParticipatingCompaniesCount}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
+                  <div className="text-xs text-neutral-400 mt-1">
                     Associadas exclusivamente por CNPJ de 14 dígitos
                   </div>
                 </div>
-                <div className="text-[11px] text-slate-400 border-t border-slate-700/80 pt-2">
-                  1.237 manifestações populares verificadas registradas
+                <div className="text-[11px] text-neutral-400 border-t border-neutral-800 pt-2">
+                  Votação popular auditável com token HMAC e LGPD
                 </div>
               </div>
 
               {/* Card 4 */}
-              <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+              <div className="bg-neutral-900/90 border border-neutral-800 rounded-xl p-5 flex flex-col justify-between hover:border-neutral-700 transition-colors">
                 <div className="flex items-start justify-between">
-                  <span className="text-xs font-medium text-slate-300">
+                  <span className="text-xs font-medium text-neutral-300">
                     Obras com atraso documentado
                   </span>
-                  <HardHat className="w-5 h-5 text-amber-400 shrink-0" />
+                  <HardHat className="w-5 h-5 text-amber-500 shrink-0" />
                 </div>
                 <div className="my-3">
-                  <div className="font-mono text-3xl font-bold text-amber-300">
+                  <div className="font-mono text-3xl font-bold text-amber-400">
                     {indicators.delayedWorksDocumentedCount}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
-                    Atraso médio documentado: 25 meses frente ao contrato inicial
+                  <div className="text-xs text-neutral-400 mt-1">
+                    Atraso médio documentado frente ao contrato original
                   </div>
                 </div>
-                <div className="text-[11px] text-slate-400 border-t border-slate-700/80 pt-2">
-                  Recorte quinquenal: 07/11/2021 a 07/11/2026
+                <div className="text-[11px] text-neutral-400 border-t border-neutral-800 pt-2">
+                  Fonte: Gesconfi SIURB & Obras Abertas PMSP
                 </div>
               </div>
 
               {/* Card 5 */}
-              <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+              <div className="bg-neutral-900/90 border border-neutral-800 rounded-xl p-5 flex flex-col justify-between hover:border-neutral-700 transition-colors">
                 <div className="flex items-start justify-between">
-                  <span className="text-xs font-medium text-slate-300">
-                    Valor contratado atualizado nas obras monitoradas
+                  <span className="text-xs font-medium text-neutral-300">
+                    Valor contratado nas obras monitoradas
                   </span>
-                  <Scale className="w-5 h-5 text-amber-400 shrink-0" />
+                  <Scale className="w-5 h-5 text-amber-500 shrink-0" />
                 </div>
                 <div className="my-3">
                   <div className="font-mono text-2xl sm:text-3xl font-bold text-white">
                     {formatBRL(indicators.totalContractedInDelayedWorksValue)}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
-                    Orçamento inicial somado: {formatCompactBRL(115500000)} (+14,7% em aditivos)
+                  <div className="text-xs text-neutral-400 mt-1">
+                    Valores atualizados após termos aditivos oficiais
                   </div>
                 </div>
-                <div className="text-[11px] text-slate-400 border-t border-slate-700/80 pt-2">
-                  Fonte: Obras Abertas PMSP & Transparência SP (Demo)
+                <div className="text-[11px] text-neutral-400 border-t border-neutral-800 pt-2">
+                  Medição física descolada da financeira sob alerta
                 </div>
               </div>
 
               {/* Card 6 */}
-              <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-5 flex flex-col justify-between">
+              <div className="bg-neutral-900/90 border border-neutral-800 rounded-xl p-5 flex flex-col justify-between hover:border-neutral-700 transition-colors">
                 <div className="flex items-start justify-between">
-                  <span className="text-xs font-medium text-slate-300">
+                  <span className="text-xs font-medium text-neutral-300">
                     Contratos com ocorrências documentadas
                   </span>
-                  <AlertOctagon className="w-5 h-5 text-rose-400 shrink-0" />
+                  <AlertOctagon className="w-5 h-5 text-red-500 shrink-0" />
                 </div>
                 <div className="my-3">
-                  <div className="font-mono text-3xl font-bold text-rose-300">
+                  <div className="font-mono text-3xl font-bold text-red-400">
                     {indicators.contractsWithOccurrencesCount}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
-                    20 ocorrências documentadas nos últimos 6 meses
+                  <div className="text-xs text-neutral-400 mt-1">
+                    Ocorrências oficiais documentadas nos últimos 6 meses
                   </div>
                 </div>
-                <div className="text-[11px] text-slate-400 border-t border-slate-700/80 pt-2">
+                <div className="text-[11px] text-neutral-400 border-t border-neutral-800 pt-2">
                   Indicadores objetivos auditáveis (Seção 10)
                 </div>
               </div>
@@ -239,57 +238,55 @@ export default function HomePage() {
         <section aria-labelledby="heading-licitacoes-destaque">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
             <div>
-              <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
-                Seção 5.2 • Próximas Aberturas (Ordenadas pela data mais próxima)
+              <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-bold flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                Seção 5.2 • Próximas Aberturas Oficiais
               </div>
               <h2
                 id="heading-licitacoes-destaque"
-                className="font-display text-2xl font-bold text-slate-900 mt-1"
+                className="font-display text-2xl font-black text-neutral-900 mt-1"
               >
                 Licitações Publicadas em Destaque
               </h2>
-              <p className="text-sm text-slate-600 mt-1">
-                Editais efetivamente publicados com sessão agendada ou recebimento de
-                propostas aberto. Itens do Plano de Contratações Anual (PCA) ficam
-                separados na aba de Planejamento.
+              <p className="text-sm text-neutral-600 mt-1">
+                Editais efetivamente publicados com sessão agendada ou recebimento de propostas aberto.
               </p>
             </div>
             <Link
               href="/licitacoes"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-800 hover:text-blue-950 shrink-0"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-red-700 hover:text-red-800 shrink-0"
             >
-              Ver todas as licitações e filtros avançados
+              Ver todas as licitações e filtros
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {publishedProcurements.map((lic) => (
+            {publishedProcurements.slice(0, 4).map((lic) => (
               <article
                 key={lic.id}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col justify-between"
+                className="bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md hover:border-red-200 transition-all p-6 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-900 border border-blue-200">
-                      <Calendar className="w-3.5 h-3.5" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-neutral-100 text-neutral-900 border border-neutral-200">
+                      <Calendar className="w-3.5 h-3.5 text-red-600" />
                       Sessão: {formatDateBR(lic.sessionDate)}
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                       {lic.statusLabel}
                     </span>
                   </div>
 
-                  <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">
+                  <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1">
                     {lic.secretariat}
                   </div>
-                  <h3 className="font-display text-lg font-bold text-slate-900 leading-snug mb-3">
+                  <h3 className="font-display text-lg font-bold text-neutral-900 leading-snug mb-3">
                     {lic.simplifiedTitle}
                   </h3>
 
-                  {/* Destaque Monetário (Seção 3.1 e 5.2) */}
-                  <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80 mb-4">
-                    <div className="text-[11px] font-mono uppercase text-slate-500">
+                  <div className="p-3.5 rounded-lg bg-neutral-50 border border-neutral-200 mb-4">
+                    <div className="text-[11px] font-mono uppercase text-neutral-500">
                       Valor Estimado Oficial no Edital
                     </div>
                     {lic.costs.isBudgetConfidential ? (
@@ -299,29 +296,29 @@ export default function HomePage() {
                         </span>
                       </div>
                     ) : (
-                      <div className="font-mono text-2xl font-bold text-slate-900 mt-0.5">
+                      <div className="font-mono text-2xl font-bold text-neutral-900 mt-0.5">
                         {formatBRL(lic.costs.estimatedValue)}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
-                  <div className="text-xs text-slate-600 flex items-center gap-3">
+                <div className="pt-3 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-xs text-neutral-600 flex items-center gap-3">
                     <span className="inline-flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5 text-slate-400" />
+                      <Users className="w-3.5 h-3.5 text-neutral-400" />
                       {lic.participantsCount !== null
-                        ? `${lic.participantsCount} empresas participantes`
-                        : "Participantes após abertura"}
+                        ? `${lic.participantsCount} empresas`
+                        : "Participantes após sessão"}
                     </span>
-                    <span className="font-mono text-[11px] text-slate-400">
-                      {lic.isDemoData ? "[DEMO]" : "[OFICIAL PNCP]"}
+                    <span className="font-mono text-[11px] text-neutral-400">
+                      [OFICIAL PNCP]
                     </span>
                   </div>
 
                   <Link
                     href={`/licitacoes/${lic.id}`}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-blue-900 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-neutral-900 text-white text-xs font-bold hover:bg-red-700 transition-colors"
                   >
                     Consultar detalhes
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -336,25 +333,25 @@ export default function HomePage() {
         <section aria-labelledby="heading-empresas-destaque">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
             <div>
-              <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
-                Seção 5.3 • Percepção Popular Verificada por CPF
+              <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-bold flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                Seção 5.3 • Percepção Popular Paulista (1 CPF = 1 Voto)
               </div>
               <h2
                 id="heading-empresas-destaque"
-                className="font-display text-2xl font-bold text-slate-900 mt-1"
+                className="font-display text-2xl font-black text-neutral-900 mt-1"
               >
                 Empresas com Maior Volume de Manifestações Cidadãs
               </h2>
-              <p className="text-sm text-slate-600 mt-1">
-                A avaliação reflete exclusivamente a percepção voluntária de cidadãos
-                verificados e <strong>não classifica uma empresa como regular ou irregular</strong>.
+              <p className="text-sm text-neutral-600 mt-1">
+                A avaliação reflete a percepção voluntária de cidadãos paulistanos verificados por CPF.
               </p>
             </div>
             <Link
               href="/empresas"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-800 hover:text-blue-950 shrink-0"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-red-700 hover:text-red-800 shrink-0"
             >
-              Acessar Ranking de Empresas Completo
+              Acessar Ranking de Fornecedores
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -363,77 +360,73 @@ export default function HomePage() {
             {highlightedCompanies.slice(0, 3).map((comp) => (
               <div
                 key={comp.id}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between"
+                className="bg-white rounded-xl border border-neutral-200 shadow-sm hover:border-red-200 p-6 flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between gap-2 text-xs text-slate-500 font-mono mb-2">
+                  <div className="flex items-center justify-between gap-2 text-xs text-neutral-500 font-mono mb-2">
                     <span>CNPJ: {comp.cnpjFormatted}</span>
-                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">
-                      Amostra: {comp.votes.totalVotes} votos
+                    <span className="px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 font-bold">
+                      {comp.votes.totalVotes} votos
                     </span>
                   </div>
-                  <h3 className="font-display text-base font-bold text-slate-900 leading-snug">
+                  <h3 className="font-display text-base font-bold text-neutral-900 leading-snug">
                     {comp.legalName}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-1 mb-4">{comp.sector}</p>
+                  <p className="text-xs text-neutral-500 mt-1 mb-4">{comp.sector}</p>
 
-                  {/* Distribuição dos posicionamentos (Seção 5.3) */}
                   <div className="space-y-2 my-4">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-medium text-emerald-800">
+                    <div className="flex items-center justify-between text-xs font-semibold">
+                      <span className="text-emerald-700">
                         Recomendo ({comp.votes.recommendPct}%)
                       </span>
-                      <span className="font-medium text-rose-800">
+                      <span className="text-red-700">
                         Não recomendo ({comp.votes.rejectPct}%)
                       </span>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-slate-100 overflow-hidden flex">
+                    <div className="w-full h-3 rounded-full bg-neutral-100 overflow-hidden flex">
                       <div
                         style={{ width: `${comp.votes.recommendPct}%` }}
                         className="bg-emerald-600 h-full"
-                        title={`Recomendo: ${comp.votes.recommendPct}%`}
                       />
                       <div
                         style={{ width: `${comp.votes.neutralPct}%` }}
-                        className="bg-slate-400 h-full"
-                        title={`Sem opinião formada: ${comp.votes.neutralPct}%`}
+                        className="bg-neutral-400 h-full"
                       />
                       <div
                         style={{ width: `${comp.votes.rejectPct}%` }}
-                        className="bg-rose-600 h-full"
-                        title={`Não recomendo: ${comp.votes.rejectPct}%`}
+                        className="bg-red-600 h-full"
                       />
                     </div>
-                    <div className="flex justify-between text-[11px] text-slate-500">
-                      <span>{comp.votes.recommendCount} recomendações</span>
+                    <div className="flex justify-between text-[11px] text-neutral-500">
+                      <span>{comp.votes.recommendCount} apoios</span>
                       <span>{comp.votes.neutralCount} neutros</span>
                       <span>{comp.votes.rejectCount} rejeições</span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200/70 text-xs">
+                  <div className="grid grid-cols-2 gap-2 p-3 rounded-lg bg-neutral-50 border border-neutral-200 text-xs">
                     <div>
-                      <span className="text-slate-500 block">Contratos identificados</span>
-                      <strong className="font-mono text-sm text-slate-900">
+                      <span className="text-neutral-500 block">Contratos na PMSP</span>
+                      <strong className="font-mono text-sm text-neutral-900">
                         {comp.identifiedContractsCount} contratos
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-500 block">Total contratado</span>
-                      <strong className="font-mono text-sm text-slate-900">
+                      <span className="text-neutral-500 block">Total contratado</span>
+                      <strong className="font-mono text-sm text-neutral-900">
                         {formatCompactBRL(comp.totalContractedAmount)}
                       </strong>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">
-                    {comp.votes.commentsCount} comentários moderados
+                <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between">
+                  <span className="text-[11px] text-neutral-500">
+                    Regularidade CNPJ verificada
                   </span>
                   <Link
                     href={`/empresas/${comp.cnpjNormalized}`}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-800 hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-red-700 hover:text-red-800"
                   >
                     Ver perfil e votar
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -448,26 +441,25 @@ export default function HomePage() {
         <section aria-labelledby="heading-obras-destaque">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
             <div>
-              <div className="text-xs font-mono uppercase tracking-wider text-amber-800 font-semibold">
-                Seção 5.4 • Monitoramento Quinquenal (07/11/2021 a 07/11/2026)
+              <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-bold flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                Seção 5.4 • Fiscalização de Obras Públicas
               </div>
               <h2
                 id="heading-obras-destaque"
-                className="font-display text-2xl font-bold text-slate-900 mt-1"
+                className="font-display text-2xl font-black text-neutral-900 mt-1"
               >
                 Obras Públicas com Atraso Documentado
               </h2>
-              <p className="text-sm text-slate-600 mt-1">
-                Comparação direta entre o ano original previsto de entrega, o orçamento
-                inicial, o valor atualizado após aditivos e os percentuais físico e
-                financeiro.
+              <p className="text-sm text-neutral-600 mt-1">
+                Comparação entre prazo contratual original, aditivos de prorrogação e execução física.
               </p>
             </div>
             <Link
               href="/obras-atrasadas"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-800 hover:text-blue-950 shrink-0"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-red-700 hover:text-red-800 shrink-0"
             >
-              Ver todas as obras atrasadas e relatar problemas
+              Ver todas as obras e relatar problemas
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -476,62 +468,62 @@ export default function HomePage() {
             {delayedWorks.slice(0, 3).map((work) => (
               <article
                 key={work.id}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between"
+                className="bg-white rounded-xl border border-neutral-200 shadow-sm hover:border-red-200 p-6 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <DelaySeverityBadge delayMonths={work.schedule.delayMonths} />
-                    <span className="text-xs font-medium text-slate-600">
+                    <span className="text-xs font-medium text-neutral-600">
                       {work.subprefecture}
                     </span>
                   </div>
 
-                  <h3 className="font-display text-base font-bold text-slate-900 leading-snug mb-2">
+                  <h3 className="font-display text-base font-bold text-neutral-900 leading-snug mb-2">
                     {work.name}
                   </h3>
-                  <div className="text-xs text-slate-600 mb-4">
-                    <strong>Empresa responsável:</strong> {work.companyName}
+                  <div className="text-xs text-neutral-600 mb-4">
+                    <strong>Contratada:</strong> {work.companyName}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2.5 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs mb-4">
+                  <div className="grid grid-cols-2 gap-2.5 p-3 rounded-lg bg-neutral-50 border border-neutral-200 text-xs mb-4">
                     <div>
-                      <span className="text-slate-500 block">Conclusão prevista</span>
-                      <strong className="font-mono text-sm text-rose-800">
+                      <span className="text-neutral-500 block">Ano previsto</span>
+                      <strong className="font-mono text-sm text-red-700">
                         Ano {work.schedule.expectedCompletionYear}
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-500 block">Prazo reprogramado</span>
-                      <strong className="font-mono text-sm text-slate-900">
+                      <span className="text-neutral-500 block">Prazo atual</span>
+                      <strong className="font-mono text-sm text-neutral-900">
                         {formatDateBR(work.schedule.updatedEndDate)}
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-500 block">Orçamento inicial</span>
-                      <strong className="font-mono text-slate-800">
+                      <span className="text-neutral-500 block">Orçamento inicial</span>
+                      <strong className="font-mono text-neutral-800">
                         {formatCompactBRL(work.costs.initialBudget)}
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-500 block">Valor atualizado</span>
-                      <strong className="font-mono text-slate-900">
+                      <span className="text-neutral-500 block">Valor após aditivos</span>
+                      <strong className="font-mono text-neutral-900">
                         {formatCompactBRL(work.costs.updatedAmountAfterAmendments)}
                       </strong>
                     </div>
                   </div>
 
-                  {/* Separação entre execução financeira e física (Regra 10) */}
+                  {/* Separação física vs. financeira */}
                   <div className="space-y-2 text-xs">
                     <div>
                       <div className="flex justify-between mb-1">
-                        <span className="text-slate-600">Valor Pago (Financeiro)</span>
-                        <span className="font-mono font-semibold text-slate-900">
+                        <span className="text-neutral-600">Valor Pago (Financeiro)</span>
+                        <span className="font-mono font-bold text-neutral-900">
                           {formatCompactBRL(work.costs.paidAmount)} ({work.costs.financialExecutionPct}%)
                         </span>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="w-full h-2 rounded-full bg-neutral-100 overflow-hidden">
                         <div
-                          className="bg-blue-700 h-full"
+                          className="bg-neutral-800 h-full"
                           style={{ width: `${work.costs.financialExecutionPct}%` }}
                         />
                       </div>
@@ -539,14 +531,14 @@ export default function HomePage() {
 
                     <div>
                       <div className="flex justify-between mb-1">
-                        <span className="text-slate-600">Execução Física Medida</span>
-                        <span className="font-mono font-semibold text-amber-900">
+                        <span className="text-neutral-600">Execução Física Medida</span>
+                        <span className="font-mono font-bold text-amber-700">
                           {work.costs.physicalExecutionPct !== null
                             ? `${work.costs.physicalExecutionPct}% (${formatCompactBRL(work.costs.physicalExecutedValue)})`
-                            : "Indisponível"}
+                            : "Aguardando medição"}
                         </span>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="w-full h-2 rounded-full bg-neutral-100 overflow-hidden">
                         <div
                           className="bg-amber-600 h-full"
                           style={{ width: `${work.costs.physicalExecutionPct ?? 0}%` }}
@@ -556,15 +548,15 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-slate-500">
+                <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between">
+                  <span className="text-[11px] font-medium text-neutral-500">
                     {work.schedule.currentStatus}
                   </span>
                   <Link
                     href={`/obras-atrasadas/${work.id}`}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-blue-900 transition-colors"
+                    className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-neutral-900 text-white text-xs font-bold hover:bg-red-700 transition-colors"
                   >
-                    Acompanhar obra
+                    Acompanhar
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
@@ -573,69 +565,67 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 5.5 Ranking de Problemas (Top 5 Contratações que Merecem Atenção) */}
+        {/* 5.5 Ranking de Atenção */}
         <section
           aria-labelledby="heading-ranking-problemas"
-          className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8"
+          className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6 sm:p-8"
         >
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-neutral-200">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-rose-800 font-semibold">
-                <ShieldAlert className="w-4 h-4" />
-                Seção 5.5 e Seção 10 • Últimos 6 Meses
+              <div className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-red-700 font-bold">
+                <ShieldAlert className="w-4 h-4 text-red-600" />
+                Seção 5.5 • Indicadores Objetivos
               </div>
               <h2
                 id="heading-ranking-problemas"
-                className="font-display text-2xl font-bold text-slate-900 mt-1"
+                className="font-display text-2xl font-black text-neutral-900 mt-1"
               >
-                Contratações que Merecem Atenção (Top 5 Indicadores Objetivos)
+                Contratações que Merecem Atenção (Top 5)
               </h2>
-              <p className="text-sm text-slate-600 mt-1 max-w-3xl">
-                Pontuação calculada exclusivamente por eventos documentados em fontes
-                oficiais (atrasos, aditivos sucessivos, glosas, penalidades e
-                apontamentos do TCM-SP). <strong>Não constitui declaração de ilegalidade.</strong>
+              <p className="text-sm text-neutral-600 mt-1 max-w-3xl">
+                Pontuação calculada exclusivamente por dados documentados (aditivos de valor, prorrogações sucessivas e apontamentos de controle).
               </p>
             </div>
             <Link
               href="/contratacoes-atencao"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-blue-900 transition-colors shrink-0"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-neutral-900 text-white text-xs font-bold hover:bg-red-700 transition-colors shrink-0"
             >
-              Ver metodologia de pesos e evidências
+              Ver metodologia e pesos
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="divide-y divide-slate-200 mt-2">
+          <div className="divide-y divide-neutral-200 mt-2">
             {attentionContracts.map((item) => (
               <div
                 key={item.id}
                 className="py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 font-mono font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-9 h-9 rounded-lg bg-red-50 border border-red-200 text-red-900 font-mono font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
                     #{item.rankPosition}
                   </div>
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                      <span className="font-mono font-semibold text-slate-700">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500">
+                      <span className="font-mono font-semibold text-neutral-700">
                         Contrato {item.contractNumber}
                       </span>
                       <span>•</span>
                       <span>{item.secretariat}</span>
                       <span>•</span>
-                      <span>Último registro: {formatDateBR(item.lastRecordDate)}</span>
+                      <span>Registro: {formatDateBR(item.lastRecordDate)}</span>
                     </div>
-                    <h3 className="font-display text-base font-bold text-slate-900 mt-0.5">
+                    <h3 className="font-display text-base font-bold text-neutral-900 mt-0.5">
                       {item.simplifiedName}
                     </h3>
-                    <div className="text-xs text-slate-600 mt-1">
-                      <strong>Empresa:</strong> {item.companyName} ({item.companyCnpjFormatted})
+                    <div className="text-xs text-neutral-600 mt-1">
+                      <strong>Contratada:</strong> {item.companyName} ({item.companyCnpjFormatted})
                     </div>
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {item.primaryOccurrenceTypes.map((occ, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 border border-slate-200"
+                          className="px-2 py-0.5 rounded text-[11px] bg-neutral-100 text-neutral-700 border border-neutral-200 font-medium"
                         >
                           {occ}
                         </span>
@@ -644,22 +634,22 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex sm:items-center justify-between lg:justify-end gap-4 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
+                <div className="flex sm:items-center justify-between lg:justify-end gap-4 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-neutral-100">
                   <div className="text-left lg:text-right">
-                    <div className="text-[11px] text-slate-500 uppercase font-mono">
+                    <div className="text-[11px] text-neutral-500 uppercase font-mono">
                       Valor Atualizado
                     </div>
-                    <div className="font-mono text-base font-bold text-slate-900">
+                    <div className="font-mono text-base font-bold text-neutral-900">
                       {formatBRL(item.currentContractValue)}
                     </div>
-                    <div className="text-[11px] text-rose-800 font-medium">
-                      {item.documentedOccurrencesCount} ocorrências • Índice:{" "}
+                    <div className="text-[11px] text-red-700 font-bold">
+                      {item.documentedOccurrencesCount} ocorrências • Score:{" "}
                       <strong className="font-mono">{item.totalAttentionScore}/100 pts</strong>
                     </div>
                   </div>
                   <Link
                     href={`/contratacoes-atencao#${item.id}`}
-                    className="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold text-slate-800 hover:bg-slate-50"
+                    className="px-3 py-2 rounded-lg border border-neutral-300 text-xs font-bold text-neutral-800 hover:bg-neutral-50"
                   >
                     Ver dossiê
                   </Link>

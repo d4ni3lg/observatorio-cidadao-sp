@@ -125,7 +125,7 @@ export default function ContratacoesAtencaoPage() {
                   </span>
                 </div>
 
-                <div className="text-xs font-semibold uppercase tracking-wide text-blue-900">
+                <div className="text-xs font-semibold uppercase tracking-wide text-red-700">
                   {item.secretariat}
                 </div>
                 <h2 className="font-display text-2xl font-bold text-slate-900">
@@ -137,7 +137,7 @@ export default function ContratacoesAtencaoPage() {
                     <strong>Empresa Responsável:</strong>{" "}
                     <Link
                       href={`/empresas/${item.companyCnpjFormatted.replace(/\D/g, "")}`}
-                      className="text-blue-900 font-semibold hover:underline"
+                      className="text-red-700 font-semibold hover:underline"
                     >
                       {item.companyName} ({item.companyCnpjFormatted})
                     </Link>
@@ -231,7 +231,7 @@ export default function ContratacoesAtencaoPage() {
                           key={i}
                           className="p-2.5 rounded bg-white border border-slate-200"
                         >
-                          <div className="font-mono text-[11px] text-blue-900 font-semibold">
+                          <div className="font-mono text-[11px] text-red-700 font-semibold">
                             {occ.contractRef}
                           </div>
                           <div className="font-medium text-slate-900">{occ.title}</div>
@@ -351,7 +351,7 @@ export default function ContratacoesAtencaoPage() {
                             href={ind.evidenceDocUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-blue-800 font-semibold hover:underline"
+                            className="inline-flex items-center gap-1 text-red-700 font-semibold hover:underline"
                           >
                             {ind.evidenceDocTitle}
                             <ExternalLink className="w-3 h-3" />

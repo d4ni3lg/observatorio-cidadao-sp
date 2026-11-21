@@ -79,27 +79,28 @@ export function BidTimelineChart({ bids, estimatedValue }: BidChartProps) {
               return `${label} (${item?.hora || ""}) - ${item?.empresa || ""}`;
             }}
             contentStyle={{
-              backgroundColor: "#0f172a",
+              backgroundColor: "#09090b",
               color: "#fff",
               borderRadius: "8px",
               fontSize: "12px",
+              border: "1px solid #27272a",
             }}
           />
           {estimatedValue && (
             <ReferenceLine
               y={estimatedValue}
-              label={{ value: "Valor Estimado", fill: "#94a3b8", fontSize: 10 }}
-              stroke="#94a3b8"
+              label={{ value: "Teto Estimado Oficial", fill: "#71717a", fontSize: 10 }}
+              stroke="#71717a"
               strokeDasharray="4 4"
             />
           )}
           <Line
             type="monotone"
             dataKey="valor"
-            stroke="#1d4ed8"
+            stroke="#dc2626"
             strokeWidth={3}
-            dot={{ r: 5, fill: "#1d4ed8" }}
-            activeDot={{ r: 8 }}
+            dot={{ r: 5, fill: "#b91c1c" }}
+            activeDot={{ r: 8, fill: "#ef4444" }}
           />
         </LineChart>
       </ResponsiveContainer>

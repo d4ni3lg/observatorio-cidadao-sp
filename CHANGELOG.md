@@ -7,6 +7,32 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.3.0] - 2026-11-21
+
+### 🎨 Nova Identidade Visual Paulista, Mobile de Alta Performance e Blindagem de Segurança
+
+#### 🏛️ Identidade Visual Paulista (Vermelho, Preto e Branco)
+- **Logotipo Cívico Oficial (`Logo.tsx`)**: Brasão vetorial estilizado com as cores da bandeira paulista (preto nobre, branco e vermelho bandeirante), estrela cívica e lupa de controle social.
+- **Paleta de Cores Redesenhada**: Substituição integral das tonalidades genéricas pelo padrão paulista (`#09090B` preto nobre, `#B91C1C` / `#DC2626` vermelho institucional e branco puro de alto contraste).
+- **Gráficos e Indicadores Customizados**: Atualização visual do `BidTimelineChart` e `WorkFinancialChart` com cores temáticas paulistas e tooltips escuros elegantes.
+
+#### 📱 Experiência Mobile Refinada
+- **Barra de Navegação Inferior Móvel (`MobileBottomNav.tsx`)**: Barra de atalhos rápidos fixada no rodapé em telas menores com ícones para Início, Licitações, Empresas, Obras e Minha Conta.
+- **Menu Drawer Mobile Otimizado**: Drawer deslizante com fundo translúcido em desfoque (*backdrop-blur*), trava de scroll no body e áreas de toque com mínimo de 48px.
+- **Compatibilidade com Áreas Seguras (`pb-safe`)**: Espaçamento adaptativo para smartphones modernos com entalhe (*notch*).
+
+#### 🛡️ Blindagem Completa de Segurança e LGPD
+- **Middleware Global de Segurança (`src/middleware.ts`)**:
+  - Detecção e bloqueio de injeções (SQL Injection, Path Traversal `../`, pseudo-scripts e payloads perigosos).
+  - Validação estrita de CSRF em todas as rotas mutantes da API (`POST`, `PUT`, `DELETE`).
+  - Cabeçalhos de segurança HTTP em todas as respostas (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `HSTS`, `Permissions-Policy`).
+  - Omissão de cabeçalho `X-Powered-By` no `next.config.ts`.
+- **Proteção Anti-Bot por Honeypot**: Inclusão de armadilhas invisíveis nos formulários de autenticação de CPF e envio de votos para descarte de bots automatizados.
+- **Rate Limiting em Memória (`src/lib/security/index.ts`)**: Limite de requisições por IP e por token para blindar contra tentativas de ataque por força bruta em CPFs e inundações de votos.
+- **Sanitização Estrita de Entradas**: Remoção de tags HTML, scripts e sequências maliciosas com comparação de tokens em tempo constante (*timing-safe*).
+
+---
+
 ## [1.2.2] - 2026-11-21
 
 ### 🛡️ Atualização de Segurança (CVE-2025-66478)

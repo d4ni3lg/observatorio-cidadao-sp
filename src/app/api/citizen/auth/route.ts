@@ -12,6 +12,7 @@ import {
   deleteCitizenAccount,
   getCitizenVotes,
 } from "@/lib/citizen-auth/vote-store";
+import { validateHoneypot, checkRateLimit } from "@/lib/security";
 
 /**
  * Autenticação Cidadã com CPF, Pseudonimização e LGPD (Seção 7.2 e Seção 8)
@@ -23,7 +24,29 @@ import {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { rawCpf, residentConfirmed, acceptTerms } = body;
+    const { rawCpf, residentConfirmed, acceptTerms, _hp } = body;
+
+    // Defesa anti-bot por Honeypot
+    if (!validateHoneypot(_hp)) {
+      return NextResponse.json({ error: "Requisição rejeitada." }, { status: 400 });
+    }
+
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      request.headers.get("x-real-ip") ||
+      "127.0.0.1";
+
+    // Rate Limiting estrito de validações por IP (máximo 10 tentativas por minuto para impedir brute-force de CPFs)
+    const rate = checkRateLimit(`auth:cpf:${ip}`, 10, 60 * 1000);
+    if (!rate.allowed) {
+      return NextResponse.json(
+        {
+          error:
+            "Muitas tentativas de validação consecutivas. Por motivos de segurança, aguarde 1 minuto.",
+        },
+        { status: 429 }
+      );
+    }
 
     if (!acceptTerms) {
       return NextResponse.json(

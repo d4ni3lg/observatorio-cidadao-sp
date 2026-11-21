@@ -152,6 +152,7 @@ export default function EmpresaProfilePage() {
           companyCnpj: company.cnpjNormalized,
           voteType: userVote,
           justification: commentText,
+          _hp: "",
         }),
       });
 
@@ -213,7 +214,7 @@ export default function EmpresaProfilePage() {
               </span>
             </div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-2.5">
-              <Building2 className="w-7 h-7 text-blue-800 shrink-0" />
+              <Building2 className="w-7 h-7 text-red-700 shrink-0" />
               <span>{company.legalName}</span>
             </h1>
             <p className="text-sm text-slate-600">{company.sector}</p>
@@ -254,11 +255,11 @@ export default function EmpresaProfilePage() {
               {formatBRL(company.totalContractedAmount)}
             </strong>
           </div>
-          <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
-            <span className="text-xs text-blue-900 block font-medium">
+          <div className="p-4 rounded-xl bg-red-50 border border-red-200">
+            <span className="text-xs text-red-700 block font-medium">
               Amostra popular verificada
             </span>
-            <strong className="font-mono text-2xl text-blue-950 mt-1 block">
+            <strong className="font-mono text-2xl text-red-950 mt-1 block">
               {totalVotes} votos
             </strong>
           </div>
@@ -268,7 +269,7 @@ export default function EmpresaProfilePage() {
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="space-y-1">
             <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <Scale className="w-4 h-4 text-blue-800" />
+              <Scale className="w-4 h-4 text-red-700" />
               Consulta de Sanções Administrativas (CEIS / CNEP — Fonte 6):
             </div>
             <p className="text-slate-700">{company.ceisCnepStatus.summary}</p>
@@ -283,7 +284,7 @@ export default function EmpresaProfilePage() {
             href={company.ceisCnepStatus.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-semibold text-blue-800 hover:underline shrink-0"
+            className="inline-flex items-center gap-1 font-semibold text-red-700 hover:underline shrink-0"
           >
             Consultar CEIS/CNEP oficial
             <ExternalLink className="w-3.5 h-3.5" />
@@ -292,9 +293,9 @@ export default function EmpresaProfilePage() {
 
         {/* Direito de Resposta / Manifestação Oficial da Empresa (Seção 8.3) */}
         {company.companyOfficialResponse && (
-          <div className="p-5 rounded-xl bg-blue-50/70 border border-blue-200 space-y-2 text-xs">
+          <div className="p-5 rounded-xl bg-red-50/70 border border-red-200 space-y-2 text-xs">
             <div className="flex items-center justify-between">
-              <strong className="text-blue-950 uppercase font-mono">
+              <strong className="text-red-950 uppercase font-mono">
                 Manifestação Pública Oficial da Empresa (Seção 8.3 — Direito de Resposta)
               </strong>
               <span className="text-slate-500">
@@ -542,7 +543,7 @@ export default function EmpresaProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
           <h2 className="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-blue-800" />
+            <MessageSquare className="w-5 h-5 text-red-700" />
             <span>Comentários Cidadãos Moderados ({liveComments.length})</span>
           </h2>
           {liveComments.length === 0 ? (
@@ -583,9 +584,9 @@ export default function EmpresaProfilePage() {
               <Link
                 key={p.id}
                 href={`/licitacoes/${p.id}`}
-                className="block p-3.5 rounded-xl border border-slate-200 hover:border-blue-800 transition-colors"
+                className="block p-3.5 rounded-xl border border-slate-200 hover:border-red-800 transition-colors"
               >
-                <div className="text-[11px] font-mono text-blue-800 font-semibold">
+                <div className="text-[11px] font-mono text-red-700 font-semibold">
                   LICITAÇÃO PARTICIPANTE • {p.processNumber}
                 </div>
                 <div className="font-bold text-slate-900 mt-0.5">

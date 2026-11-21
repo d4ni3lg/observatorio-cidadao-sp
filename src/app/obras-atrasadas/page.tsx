@@ -181,7 +181,7 @@ export default function ObrasAtrasadasPage() {
 
                   <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600">
                     <span className="inline-flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5 text-blue-800" />
+                      <MapPin className="w-3.5 h-3.5 text-red-700" />
                       {work.subprefecture} — {work.addressLocation}
                     </span>
                     <span className="inline-flex items-center gap-1">
@@ -193,7 +193,7 @@ export default function ObrasAtrasadasPage() {
 
                 <Link
                   href={`/obras-atrasadas/${work.id}`}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-blue-900 transition-colors shrink-0"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-red-700 transition-colors shrink-0"
                 >
                   <span>Abrir página individual e relatar andamento</span>
                   <ArrowRight className="w-4 h-4" />
@@ -231,7 +231,7 @@ export default function ObrasAtrasadasPage() {
                 </div>
                 <div>
                   <span className="text-slate-500 block">Valor Efetivamente Pago</span>
-                  <strong className="font-mono text-base text-blue-900">
+                  <strong className="font-mono text-base text-red-700">
                     {formatCompactBRL(work.costs.paidAmount)} (
                     {work.costs.financialExecutionPct}%)
                   </strong>

@@ -30,6 +30,7 @@ export default function ContaCidadaPage() {
 
   // Formulário de Verificação
   const [cpfInput, setCpfInput] = useState("");
+  const [honeypot, setHoneypot] = useState(""); // Honeypot anti-bot
   const [residenceCheck, setResidenceCheck] = useState(false);
   const [lgpdCheck, setLgpdCheck] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,15 +79,21 @@ export default function ContaCidadaPage() {
     setErrorMsg(null);
     setSuccessMsg(null);
 
+    // Se o honeypot estiver preenchido, rejeita silenciosamente
+    if (honeypot) {
+      setErrorMsg("Requisição rejeitada.");
+      return;
+    }
+
     const clean = cpfInput.replace(/\D/g, "");
     if (clean.length !== 11) {
-      setErrorMsg("O CPF deve conter 11 dígitos numéricos.");
+      setErrorMsg("O CPF deve conter exatamente 11 dígitos numéricos.");
       return;
     }
 
     if (!isValidCPF(clean)) {
       setErrorMsg(
-        "CPF matematicamente inválido. Verifique os números digitados (regras de validação módulo 11)."
+        "CPF matematicamente inválido. Verifique os números digitados (validação oficial módulo 11)."
       );
       return;
     }
@@ -106,6 +113,7 @@ export default function ContaCidadaPage() {
           rawCpf: clean,
           residentConfirmed: residenceCheck,
           acceptTerms: lgpdCheck,
+          _hp: honeypot,
         }),
       });
 
@@ -127,10 +135,10 @@ export default function ContaCidadaPage() {
 
       saveClientCitizenSession(newSession);
       setSession(newSession);
-      setSuccessMsg("Identidade cívica verificada! Você agora pode votar com validade de 1 CPF = 1 voto.");
+      setSuccessMsg("Identidade cívica verificada! Você agora pode votar com regra de 1 CPF = 1 voto.");
       fetchVotes(newSession.citizenToken);
     } catch (err: any) {
-      setErrorMsg("Falha na comunicação com o servidor de verificação.");
+      setErrorMsg("Falha na comunicação segura com o servidor de verificação.");
     } finally {
       setLoading(false);
     }
@@ -140,13 +148,13 @@ export default function ContaCidadaPage() {
     clearClientCitizenSession();
     setSession(null);
     setCpfInput("");
-    setSuccessMsg("Sessão encerrada neste dispositivo.");
+    setSuccessMsg("Sessão encerrada com segurança neste dispositivo.");
   };
 
   const handleDeleteAccount = async () => {
     if (!session) return;
     const confirm = window.confirm(
-      "CONFIRMAÇÃO DE DIREITO LGPD (Art. 18, VI):\n\nTem certeza de que deseja excluir permanentemente sua conta cívica e anonimizar todos os seus votos e manifestações? Esta ação não pode ser desfeita."
+      "CONFIRMAÇÃO DE DIREITO LGPD (Art. 18, VI):\n\nTem certeza de que deseja excluir permanentemente sua conta cívica e anonimizar todos os seus votos? Esta ação é irreversível."
     );
     if (!confirm) return;
 
@@ -177,7 +185,7 @@ export default function ContaCidadaPage() {
 
   if (!mounted) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-16 text-center text-xs text-slate-500">
+      <div className="max-w-5xl mx-auto px-4 py-16 text-center text-xs text-neutral-500">
         Carregando painel de cidadania e privacidade...
       </div>
     );
@@ -187,54 +195,64 @@ export default function ContaCidadaPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Cabeçalho */}
       <div className="space-y-2">
-        <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
-          Seção 7.1, 7.2 e Seção 8 • Identidade Verificada por CPF e Privacidade por Design
+        <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-bold flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-red-600"></span>
+          Identidade Verificada por CPF • Criptografia HMAC & LGPD
         </div>
-        <h1 className="font-display text-3xl font-bold text-slate-900">
+        <h1 className="font-display text-3xl font-black text-neutral-900">
           Conta Cidadã & Participação Auditável
         </h1>
-        <p className="text-sm text-slate-600 leading-relaxed">
-          Verifique sua identidade com CPF válido para participar de votações em empresas
-          e contratações da Prefeitura de São Paulo. Seus dados pessoais são estritamente
-          protegidos pela LGPD (Lei 13.709/2018).
+        <p className="text-sm text-neutral-600 leading-relaxed max-w-3xl">
+          Verifique sua identidade com CPF válido para participar de votações em empresas e contratações de São Paulo. Seus dados pessoais são estritamente protegidos pela LGPD (Lei 13.709/2018).
         </p>
       </div>
 
       {/* Alertas */}
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-rose-50 border border-rose-300 text-xs text-rose-950 flex items-start gap-2.5">
-          <AlertTriangle className="w-4 h-4 text-rose-700 shrink-0 mt-0.5" />
-          <div>{errorMsg}</div>
+        <div className="p-4 rounded-xl bg-red-50 border border-red-300 text-xs text-red-950 flex items-start gap-2.5 shadow-sm">
+          <AlertTriangle className="w-4 h-4 text-red-700 shrink-0 mt-0.5" />
+          <div className="font-medium">{errorMsg}</div>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-950 flex items-start gap-2.5">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-950 flex items-start gap-2.5 shadow-sm">
           <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-          <div>{successMsg}</div>
+          <div className="font-medium">{successMsg}</div>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Painel Esquerdo: Verificação ou Sessão Ativa */}
         {!session ? (
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 space-y-5">
-            <div className="border-b border-slate-100 pb-3">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200">
-                Identidade Não Verificada
+          <div className="bg-white rounded-2xl border border-neutral-200 p-6 sm:p-7 space-y-5 shadow-sm">
+            <div className="border-b border-neutral-100 pb-3">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-neutral-100 text-neutral-800 border border-neutral-300">
+                Identidade Pendente
               </span>
-              <h2 className="font-display font-bold text-xl text-slate-900 mt-2">
+              <h2 className="font-display font-bold text-xl text-neutral-900 mt-2">
                 Validar CPF para Habilitar Voto Cidadão
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Conforme a Seção 7.1, cada voto deve estar atrelado a um CPF real para
-                coibir bots, fraudes e manipulações no ranking popular.
+              <p className="text-xs text-neutral-500 mt-1">
+                Cada voto é atrelado a um CPF real para coibir bots, fraudes e manipulações no ranking popular paulista.
               </p>
             </div>
 
             <form onSubmit={handleVerify} className="space-y-4">
+              {/* Campo Honeypot Oculto Anti-Bot */}
+              <div style={{ display: "none" }} aria-hidden="true">
+                <input
+                  type="text"
+                  name="_hp_address"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-neutral-800 mb-1.5">
                   Número do seu CPF (apenas números ou formatado)
                 </label>
                 <input
@@ -243,41 +261,38 @@ export default function ContaCidadaPage() {
                   value={cpfInput}
                   onChange={handleCpfChange}
                   placeholder="000.000.000-00"
-                  className="w-full px-3.5 py-2.5 text-base font-mono rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
+                  className="w-full px-4 py-3 text-base font-mono rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition-colors"
                   required
                 />
-                <span className="text-[11px] text-slate-500 block mt-1">
-                  O CPF é validado matematicamente pelo algoritmo oficial de 11 dígitos.
+                <span className="text-[11px] text-neutral-500 block mt-1">
+                  O CPF é validado matematicamente pelo algoritmo oficial da Receita Federal.
                 </span>
               </div>
 
-              <div className="space-y-2.5 pt-2 border-t border-slate-100 text-xs text-slate-700">
-                <label className="flex items-start gap-2 cursor-pointer">
+              <div className="space-y-3 pt-2 border-t border-neutral-100 text-xs text-neutral-700">
+                <label className="flex items-start gap-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={residenceCheck}
                     onChange={(e) => setResidenceCheck(e.target.checked)}
-                    className="mt-0.5 rounded border-slate-300 text-blue-900 focus:ring-blue-500"
+                    className="mt-0.5 w-4 h-4 rounded border-neutral-300 text-red-700 focus:ring-red-600"
                   />
                   <span>
-                    Declaro que sou morador, contribuinte ou interessado na fiscalização
-                    dos gastos públicos do Município de São Paulo (Seção 7.1).
+                    Declaro que resido, trabalho ou tenho interesse direto na fiscalização dos gastos públicos de São Paulo.
                   </span>
                 </label>
 
-                <label className="flex items-start gap-2 cursor-pointer">
+                <label className="flex items-start gap-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={lgpdCheck}
                     onChange={(e) => setLgpdCheck(e.target.checked)}
-                    className="mt-0.5 rounded border-slate-300 text-blue-900 focus:ring-blue-500"
+                    className="mt-0.5 w-4 h-4 rounded border-neutral-300 text-red-700 focus:ring-red-600"
                     required
                   />
                   <span>
                     <strong>Consentimento LGPD (Art. 7º, I da Lei 13.709/2018):</strong>{" "}
-                    Concordo com a geração de token criptográfico HMAC irreversível para
-                    garantir a unicidade do meu voto (1 CPF = 1 voto). Meu CPF nunca
-                    será exibido publicamente nem armazenado em texto aberto.
+                    Concordo com a geração de token criptográfico HMAC irreversível para garantir 1 CPF = 1 voto. O CPF nunca é salvo em texto puro nem compartilhado.
                   </span>
                 </label>
               </div>
@@ -285,14 +300,14 @@ export default function ContaCidadaPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-blue-900 text-white text-xs font-bold hover:bg-blue-800 disabled:opacity-50 transition-colors shadow-sm"
+                className="w-full py-3.5 rounded-xl bg-red-700 text-white text-sm font-bold hover:bg-red-800 disabled:opacity-50 transition-all shadow-md active:scale-95 border border-red-800"
               >
                 {loading ? "Verificando dígitos do CPF..." : "Verificar CPF e Ativar Votação"}
               </button>
             </form>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-emerald-200 p-6 sm:p-7 space-y-5 bg-gradient-to-b from-emerald-50/20 to-white">
+          <div className="bg-white rounded-2xl border border-emerald-200 p-6 sm:p-7 space-y-5 bg-gradient-to-b from-emerald-50/20 to-white shadow-sm">
             <div className="flex items-center justify-between border-b border-emerald-100 pb-3">
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 inline-flex items-center gap-1.5">
                 <UserCheck className="w-4 h-4 text-emerald-700" />
@@ -301,8 +316,8 @@ export default function ContaCidadaPage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="text-xs text-slate-500 hover:text-slate-900 inline-flex items-center gap-1"
-                title="Desconectar deste navegador"
+                className="text-xs text-neutral-500 hover:text-red-700 inline-flex items-center gap-1 font-semibold"
+                title="Desconectar deste dispositivo"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 Sair
@@ -310,53 +325,53 @@ export default function ContaCidadaPage() {
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 block">Pseudônimo Cívico Público</span>
-                <strong className="font-display text-base text-blue-950 block mt-0.5">
+              <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200">
+                <span className="text-neutral-500 block">Pseudônimo Cívico Público</span>
+                <strong className="font-display text-base text-neutral-900 block mt-0.5">
                   {session.pseudonym}
                 </strong>
-                <span className="text-[11px] text-slate-500 mt-1 block">
-                  Identificador público em manifestações e votos (seu nome real e CPF não aparecem).
+                <span className="text-[11px] text-neutral-500 mt-1 block">
+                  Identificador público em manifestações (seu nome civil e CPF jamais aparecem).
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                <span className="text-slate-500 block">CPF Verificado (Ofuscado)</span>
-                <strong className="font-mono text-sm text-slate-800 block mt-0.5">
+              <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200">
+                <span className="text-neutral-500 block">CPF Verificado (Ofuscado)</span>
+                <strong className="font-mono text-sm text-neutral-800 block mt-0.5">
                   {session.maskedCpf}
                 </strong>
-                <span className="text-[11px] text-emerald-800 mt-1 block font-medium">
-                  ✓ Validado pelo algoritmo módulo 11 da Receita Federal
+                <span className="text-[11px] text-emerald-700 mt-1 block font-bold">
+                  ✓ Validado pelo algoritmo módulo 11 oficial
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
-                <span className="text-slate-500 block">
+              <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 space-y-1">
+                <span className="text-neutral-500 block">
                   Token Criptográfico Irreversível (HMAC-SHA256)
                 </span>
-                <code className="font-mono text-[10px] text-slate-700 break-all bg-white p-1.5 rounded border border-slate-200 block">
+                <code className="font-mono text-[10px] text-neutral-700 break-all bg-white p-2 rounded border border-neutral-200 block">
                   {session.citizenToken}
                 </code>
-                <span className="text-[11px] text-slate-500 block">
+                <span className="text-[11px] text-neutral-500 block">
                   Garante que 1 CPF = 1 voto por empresa ou contratação.
                 </span>
               </div>
 
-              <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-200 text-emerald-950 text-[11px]">
+              <div className="p-3 rounded-lg bg-emerald-50/70 border border-emerald-200 text-emerald-950 text-[11px]">
                 <strong>Consentimento LGPD Registrado:</strong> Versão{" "}
                 {session.consentVersion} em{" "}
                 {new Date(session.consentDate).toLocaleString("pt-BR")}.
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-200 space-y-2">
+            <div className="pt-3 border-t border-neutral-200 space-y-2">
               <button
                 type="button"
                 onClick={handleDeleteAccount}
                 disabled={loading}
-                className="w-full py-2.5 rounded-xl border border-rose-300 text-rose-800 text-xs font-semibold hover:bg-rose-50 flex items-center justify-center gap-1.5"
+                className="w-full py-3 rounded-xl border border-red-300 text-red-800 text-xs font-bold hover:bg-red-50 flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                <Trash2 className="w-3.5 h-3.5 text-red-600" />
                 Excluir Conta e Anonimizar Dados (Art. 18 LGPD)
               </button>
             </div>
@@ -365,82 +380,78 @@ export default function ContaCidadaPage() {
 
         {/* Painel Direito: Garantias LGPD & Links Rápidos */}
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
-            <h2 className="font-display font-bold text-lg text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-              <Shield className="w-5 h-5 text-blue-900" />
-              Garantias Legais e Diretrizes da ANPD
+          <div className="bg-white rounded-2xl border border-neutral-200 p-6 space-y-4 shadow-sm">
+            <h2 className="font-display font-bold text-lg text-neutral-900 flex items-center gap-2 border-b border-neutral-100 pb-3">
+              <Shield className="w-5 h-5 text-red-700" />
+              Garantias de Privacidade e Segurança
             </h2>
 
-            <ul className="space-y-3 text-xs text-slate-700">
+            <ul className="space-y-3.5 text-xs text-neutral-700">
               <li className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                 <div>
-                  <strong>Unicidade com Pseudonimização:</strong> O hash HMAC
-                  impossibilita a engenharia reversa para descobrir o CPF original,
-                  mas impede tecnicamente a criação de perfis duplicados para manipular rankings.
+                  <strong>Unicidade com Pseudonimização:</strong> O hash HMAC impossibilita a reversão do CPF original, mas impede que a mesma pessoa vote duas vezes ou crie bots.
                 </div>
               </li>
               <li className="flex items-start gap-2.5">
-                <Lock className="w-4 h-4 text-blue-900 shrink-0 mt-0.5" />
+                <Lock className="w-4 h-4 text-red-700 shrink-0 mt-0.5" />
                 <div>
-                  <strong>Direito de Retificação (Seção 7.1):</strong> Se você mudar de
-                  opinião sobre uma empresa ou licitação, pode alterar seu voto. O voto
-                  novo substitui o anterior imediatamente.
+                  <strong>Direito de Retificação:</strong> Você pode alterar seu voto a qualquer momento. O voto mais recente substitui o anterior sem duplicar contagens.
                 </div>
               </li>
               <li className="flex items-start gap-2.5">
-                <KeyRound className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <KeyRound className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong>Direito à Eliminação dos Dados (Art. 18, VI LGPD):</strong>{" "}
-                  Ao solicitar a exclusão da conta, seu token é removido e suas
-                  manifestações são completamente desvinculadas e desindexadas.
+                  <strong>Eliminação de Dados (Art. 18 LGPD):</strong> Ao solicitar exclusão, seu token é purgado e todas as manifestações são totalmente desvinculadas.
                 </div>
               </li>
             </ul>
           </div>
 
-          <div className="bg-slate-900 text-white rounded-2xl p-6 space-y-3">
-            <h3 className="font-display font-bold text-base">Participe Agora das Votações</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Com sua identidade cívica verificada, suas avaliações passam a compor os
-              indicadores de apoio e o ranking popular de fornecedores da cidade.
+          <div className="bg-neutral-950 text-white rounded-2xl p-6 space-y-3 shadow-lg border border-red-950/60">
+            <h3 className="font-display font-bold text-base flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-red-500"></span>
+              Participe do Controle Social Paulista
+            </h3>
+            <p className="text-xs text-neutral-300 leading-relaxed">
+              Com sua identidade cívica verificada, suas avaliações compõem a percepção popular auditável sobre empresas e editais de São Paulo.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 pt-2">
               <Link
                 href="/licitacoes"
-                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-700 hover:bg-blue-600 text-white text-xs font-semibold"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-red-700 hover:bg-red-800 text-white text-xs font-bold transition-colors"
               >
                 <FileText className="w-3.5 h-3.5" />
                 Votar em Licitações
               </Link>
               <Link
                 href="/empresas"
-                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold border border-neutral-700 transition-colors"
               >
                 <Building2 className="w-3.5 h-3.5" />
-                Avaliar Empresas
+                Avaliar Fornecedores
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Histórico de Votos do Cidadão */}
+      {/* Histórico de Votos */}
       {session && (
-        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+        <section className="bg-white rounded-2xl border border-neutral-200 p-6 sm:p-8 space-y-5 shadow-sm">
+          <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
             <div>
-              <span className="text-xs font-mono uppercase tracking-wider text-blue-900 font-bold">
-                Seu Histórico Cívico
+              <span className="text-xs font-mono uppercase tracking-wider text-red-700 font-bold">
+                Histórico Pessoal
               </span>
-              <h2 className="font-display text-xl font-bold text-slate-900 mt-1">
-                Manifestações e Votos Registrados com seu Token
+              <h2 className="font-display text-xl font-bold text-neutral-900 mt-1">
+                Manifestações Registradas com seu Token
               </h2>
             </div>
             <button
               type="button"
               onClick={() => fetchVotes(session.citizenToken)}
-              className="text-xs text-slate-500 hover:text-slate-900 inline-flex items-center gap-1"
+              className="text-xs text-neutral-600 hover:text-red-700 inline-flex items-center gap-1 font-semibold"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Atualizar
@@ -448,25 +459,25 @@ export default function ContaCidadaPage() {
           </div>
 
           {loadingVotes ? (
-            <div className="text-xs text-slate-400 py-4">Carregando histórico...</div>
+            <div className="text-xs text-neutral-400 py-4">Carregando histórico...</div>
           ) : userVotes.companies.length === 0 && userVotes.procurements.length === 0 ? (
-            <div className="p-6 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 text-center">
-              Você ainda não registrou votos em empresas ou licitações. Navegue pelas seções
-              de <Link href="/licitacoes" className="text-blue-900 underline font-semibold">Licitações</Link> e{" "}
-              <Link href="/empresas" className="text-blue-900 underline font-semibold">Empresas</Link> para participar!
+            <div className="p-6 rounded-xl bg-neutral-50 border border-neutral-200 text-xs text-neutral-600 text-center">
+              Você ainda não registrou votos. Navegue pelas seções de{" "}
+              <Link href="/licitacoes" className="text-red-700 underline font-bold">Licitações</Link> e{" "}
+              <Link href="/empresas" className="text-red-700 underline font-bold">Empresas</Link> para participar!
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               {userVotes.procurements.map((v) => (
                 <div
                   key={v.procurementId}
-                  className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2"
+                  className="p-4 rounded-xl border border-neutral-200 bg-neutral-50/70 space-y-2"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] text-slate-500">
+                    <span className="font-mono text-[11px] text-neutral-500">
                       Licitação: {v.procurementId}
                     </span>
-                    <span className="px-2 py-0.5 rounded font-bold text-[11px] bg-blue-100 text-blue-900">
+                    <span className="px-2 py-0.5 rounded font-bold text-[11px] bg-red-100 text-red-900">
                       {v.voteType === "SUPPORT"
                         ? "Apoio"
                         : v.voteType === "OPPOSE"
@@ -475,16 +486,16 @@ export default function ContaCidadaPage() {
                     </span>
                   </div>
                   {v.justification && (
-                    <p className="text-slate-700 italic border-l-2 border-blue-400 pl-2">
+                    <p className="text-neutral-700 italic border-l-2 border-red-500 pl-2">
                       &quot;{v.justification}&quot;
                     </p>
                   )}
-                  <div className="text-[11px] text-slate-400">
+                  <div className="text-[11px] text-neutral-400">
                     Última alteração: {new Date(v.updatedAt).toLocaleString("pt-BR")}
                   </div>
                   <Link
                     href={`/licitacoes/${v.procurementId}`}
-                    className="text-blue-900 hover:underline font-semibold block pt-1"
+                    className="text-red-700 hover:underline font-bold block pt-1"
                   >
                     Abrir licitação e alterar voto →
                   </Link>
@@ -494,10 +505,10 @@ export default function ContaCidadaPage() {
               {userVotes.companies.map((v) => (
                 <div
                   key={v.companyCnpj}
-                  className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2"
+                  className="p-4 rounded-xl border border-neutral-200 bg-neutral-50/70 space-y-2"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] text-slate-500">
+                    <span className="font-mono text-[11px] text-neutral-500">
                       CNPJ: {v.companyCnpj}
                     </span>
                     <span className="px-2 py-0.5 rounded font-bold text-[11px] bg-emerald-100 text-emerald-900">
@@ -509,16 +520,16 @@ export default function ContaCidadaPage() {
                     </span>
                   </div>
                   {v.justification && (
-                    <p className="text-slate-700 italic border-l-2 border-emerald-400 pl-2">
+                    <p className="text-neutral-700 italic border-l-2 border-emerald-500 pl-2">
                       &quot;{v.justification}&quot;
                     </p>
                   )}
-                  <div className="text-[11px] text-slate-400">
+                  <div className="text-[11px] text-neutral-400">
                     Última alteração: {new Date(v.updatedAt).toLocaleString("pt-BR")}
                   </div>
                   <Link
                     href={`/empresas/${v.companyCnpj}`}
-                    className="text-blue-900 hover:underline font-semibold block pt-1"
+                    className="text-red-700 hover:underline font-bold block pt-1"
                   >
                     Abrir empresa e alterar voto →
                   </Link>

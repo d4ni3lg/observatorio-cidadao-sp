@@ -20,7 +20,7 @@ export default function SobrePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       <div className="space-y-3">
-        <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
+        <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-semibold">
           Seção 7 do Menu Principal • Identidade Institucional, Escopo e Governança
         </div>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-900">
@@ -38,7 +38,7 @@ export default function SobrePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-4">
           <div className="flex items-center gap-2.5 text-slate-900">
-            <Scale className="w-6 h-6 text-blue-800" />
+            <Scale className="w-6 h-6 text-red-700" />
             <h2 className="font-display text-xl font-bold">
               Independência Institucional (Seção 1)
             </h2>

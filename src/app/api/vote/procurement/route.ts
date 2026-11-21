@@ -4,6 +4,7 @@ import {
   castProcurementVote,
   getProcurementVoteStats,
 } from "@/lib/citizen-auth/vote-store";
+import { sanitizeInput, validateHoneypot, checkRateLimit } from "@/lib/security";
 
 /**
  * Votação Cidadã em Contratações e Licitações (Seção 7.3)
@@ -14,7 +15,12 @@ import {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { citizenToken, procurementId, voteType, justification } = body;
+    const { citizenToken, procurementId, voteType, justification, _hp } = body;
+
+    // Defesa anti-bot por Honeypot
+    if (!validateHoneypot(_hp)) {
+      return NextResponse.json({ error: "Requisição rejeitada." }, { status: 400 });
+    }
 
     if (!citizenToken) {
       return NextResponse.json(
@@ -23,6 +29,15 @@ export async function POST(request: NextRequest) {
             "É necessária a verificação de identidade por CPF para votar (Seção 7.1). Acesse a aba 'Conta' para validar.",
         },
         { status: 401 }
+      );
+    }
+
+    // Rate limiting por token do cidadão
+    const rate = checkRateLimit(`vote:proc:${citizenToken}`, 15, 60 * 1000);
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { error: "Limite de votos por minuto excedido. Aguarde alguns instantes." },
+        { status: 429 }
       );
     }
 
@@ -55,12 +70,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Sanitiza justificativa textual contra injeção e XSS
+    const sanitizedJustification = justification ? sanitizeInput(justification, 500) : undefined;
+
     const vote = castProcurementVote(
       citizenToken,
       session.pseudonym,
       procurementId,
       voteType,
-      justification
+      sanitizedJustification
     );
 
     const updatedStats = getProcurementVoteStats(procurementId);

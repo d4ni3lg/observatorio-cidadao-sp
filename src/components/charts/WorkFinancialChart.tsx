@@ -72,17 +72,18 @@ export function WorkFinancialChart({
               String(name),
             ]}
             contentStyle={{
-              backgroundColor: "#0f172a",
+              backgroundColor: "#09090b",
               color: "#fff",
               borderRadius: "8px",
               fontSize: "12px",
+              border: "1px solid #27272a",
             }}
           />
           <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "8px" }} />
-          <Bar dataKey="Orçamento Inicial" fill="#64748b" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Acréscimo Aditivos" fill="#b45309" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Valor Efetivamente Pago" fill="#1d4ed8" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Medição Física Atestada" fill="#047857" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Orçamento Inicial" fill="#52525b" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Acréscimo Aditivos" fill="#d97706" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Valor Efetivamente Pago" fill="#b91c1c" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Medição Física Atestada" fill="#15803d" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

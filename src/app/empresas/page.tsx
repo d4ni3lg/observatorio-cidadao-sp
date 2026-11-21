@@ -75,7 +75,7 @@ export default function EmpresasRankingPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Cabeçalho */}
       <div className="space-y-3">
-        <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
+        <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-semibold">
           Módulo 8 • Ranking Popular e Histórico Contratual de Fornecedores
         </div>
         <h1 className="font-display text-3xl font-bold text-slate-900">
@@ -119,7 +119,7 @@ export default function EmpresasRankingPage() {
         </div>
 
         <div className="flex items-start gap-3">
-          <ShieldCheck className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+          <ShieldCheck className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
           <div>
             <strong className="text-white block mb-0.5">
               Direito de Correção Factual e Resposta
@@ -146,7 +146,7 @@ export default function EmpresasRankingPage() {
                 value={searchCnpjOrName}
                 onChange={(e) => setSearchCnpjOrName(e.target.value)}
                 placeholder="Ex.: 00.111.222/0001-91 ou Paulistana..."
-                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-600"
               />
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function EmpresasRankingPage() {
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as RankingFilter)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               <option value="MOST_VOTES">Maior número de votos verificados</option>
               <option value="MOST_RECOMMENDED">Mais recomendadas (% de aprovação)</option>
@@ -178,7 +178,7 @@ export default function EmpresasRankingPage() {
                 type="checkbox"
                 checked={enforceMinSample}
                 onChange={(e) => setEnforceMinSample(e.target.checked)}
-                className="rounded border-slate-300 text-blue-900 focus:ring-blue-900"
+                className="rounded border-slate-300 text-red-700 focus:ring-red-600"
               />
               <span>
                 <strong>Trava antidistorção ativa:</strong> exigir mínimo de 50 votos
@@ -216,7 +216,7 @@ export default function EmpresasRankingPage() {
                 </div>
 
                 <h2 className="font-display text-xl font-bold text-slate-900 flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-blue-800 shrink-0" />
+                  <Building2 className="w-5 h-5 text-red-700 shrink-0" />
                   <span>{comp.legalName}</span>
                 </h2>
                 <p className="text-xs text-slate-600">{comp.sector}</p>
@@ -225,7 +225,7 @@ export default function EmpresasRankingPage() {
               <div className="flex flex-wrap items-center gap-3 shrink-0">
                 <Link
                   href={`/empresas/${comp.cnpjNormalized}`}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-blue-900 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-red-700 transition-colors"
                 >
                   <span>Ver perfil, histórico e votar</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -255,7 +255,7 @@ export default function EmpresasRankingPage() {
               </div>
               <div>
                 <span className="text-slate-500 block">Quantidade de votos</span>
-                <strong className="font-mono text-base text-blue-900">
+                <strong className="font-mono text-base text-red-700">
                   {comp.votes.totalVotes} votos
                 </strong>
               </div>

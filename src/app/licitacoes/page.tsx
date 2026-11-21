@@ -175,7 +175,7 @@ export default function LicitacoesPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Cabeçalho da Página */}
       <div className="space-y-3">
-        <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
+        <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-semibold">
           Módulo 6 • Contratações Públicas Municipais (Recorte 07/11/2026 a 30/06/2027)
         </div>
         <h1 className="font-display text-3xl font-bold text-slate-900">
@@ -203,7 +203,7 @@ export default function LicitacoesPage() {
         >
           <FileCheck2
             className={`w-6 h-6 shrink-0 mt-0.5 ${
-              activeTab === "PUBLISHED_BID" ? "text-emerald-400" : "text-blue-800"
+              activeTab === "PUBLISHED_BID" ? "text-emerald-400" : "text-red-700"
             }`}
           />
           <div>
@@ -277,13 +277,13 @@ export default function LicitacoesPage() {
       <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
-            <Filter className="w-4 h-4 text-blue-800" />
+            <Filter className="w-4 h-4 text-red-700" />
             <span>Filtros de Pesquisa e Ordenação</span>
           </div>
           <button
             type="button"
             onClick={resetFilters}
-            className="text-xs font-medium text-blue-800 hover:underline"
+            className="text-xs font-medium text-red-700 hover:underline"
           >
             Limpar filtros
           </button>
@@ -302,7 +302,7 @@ export default function LicitacoesPage() {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="Ex.: macrodrenagem, glicemia, escolas, 6022.2026..."
-                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-600"
               />
             </div>
           </div>
@@ -315,7 +315,7 @@ export default function LicitacoesPage() {
             <select
               value={selectedSecretariat}
               onChange={(e) => setSelectedSecretariat(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               <option value="ALL">Todas as Secretarias</option>
               {secretariats.map((sec) => (
@@ -334,7 +334,7 @@ export default function LicitacoesPage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               <option value="ALL">Todas as Categorias</option>
               {categories.map((cat) => (
@@ -353,7 +353,7 @@ export default function LicitacoesPage() {
             <select
               value={selectedModality}
               onChange={(e) => setSelectedModality(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               <option value="ALL">Todas as Modalidades</option>
               {modalities.map((mod) => (
@@ -372,7 +372,7 @@ export default function LicitacoesPage() {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               <option value="ALL">Todas as Situações</option>
               <option value="RECEIVING_PROPOSALS">Recebimento de Propostas Aberto</option>
@@ -390,7 +390,7 @@ export default function LicitacoesPage() {
             <select
               value={selectedRegion}
               onChange={(e) => setSelectedRegion(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               <option value="ALL">Todas as Regiões</option>
               {regions.map((reg) => (
@@ -411,7 +411,7 @@ export default function LicitacoesPage() {
               value={participantFilter}
               onChange={(e) => setParticipantFilter(e.target.value)}
               placeholder="Ex.: Paulistana, TecnoMed ou CNPJ"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-600"
             />
           </div>
 
@@ -425,7 +425,7 @@ export default function LicitacoesPage() {
               value={minValue}
               onChange={(e) => setMinValue(e.target.value)}
               placeholder="Ex.: 10000000"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-mono focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-mono focus:outline-none focus:ring-2 focus:ring-red-600"
             />
           </div>
 
@@ -439,7 +439,7 @@ export default function LicitacoesPage() {
               value={maxValue}
               onChange={(e) => setMaxValue(e.target.value)}
               placeholder="Ex.: 100000000"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-mono focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 font-mono focus:outline-none focus:ring-2 focus:ring-red-600"
             />
           </div>
 
@@ -451,7 +451,7 @@ export default function LicitacoesPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               <option value="NEAREST_DATE">Data da sessão mais próxima (Padrão)</option>
               <option value="HIGHEST_VALUE">Maior valor estimado</option>
@@ -530,7 +530,7 @@ export default function LicitacoesPage() {
                     </span>
                   </div>
 
-                  <div className="text-xs font-semibold uppercase tracking-wide text-blue-900">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-red-700">
                     {lic.secretariat} • {lic.region}
                   </div>
 
@@ -544,7 +544,7 @@ export default function LicitacoesPage() {
 
                   <div className="pt-2 flex flex-wrap items-center gap-4 text-xs text-slate-600">
                     <span className="inline-flex items-center gap-1.5 font-medium">
-                      <Calendar className="w-3.5 h-3.5 text-blue-800" />
+                      <Calendar className="w-3.5 h-3.5 text-red-700" />
                       {lic.recordType === "PCA_PLANNING"
                         ? `Janela prevista: ${lic.plannedWindow}`
                         : `Data da sessão: ${formatDateBR(lic.sessionDate)}`}
@@ -588,7 +588,7 @@ export default function LicitacoesPage() {
 
                   <Link
                     href={`/licitacoes/${lic.id}`}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-blue-900 transition-colors"
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-red-700 transition-colors"
                   >
                     <span>Abrir página da contratação</span>
                     <ArrowRight className="w-3.5 h-3.5" />

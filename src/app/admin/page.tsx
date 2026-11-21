@@ -102,7 +102,7 @@ export default function AdminDashboardPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
+          <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-semibold">
             Seção 15 • Governança, Moderação, Sincronização e Trilha de Auditoria
           </div>
           <h1 className="font-display text-3xl font-bold text-slate-900 mt-1">
@@ -125,7 +125,7 @@ export default function AdminDashboardPage() {
       {/* Fila de Moderação de Comentários e Relatos de Obras */}
       <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
         <h2 className="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-blue-800" />
+          <MessageSquare className="w-5 h-5 text-red-700" />
           Fila de Moderação de Manifestações Populares e Relatos de Obras
         </h2>
 
@@ -136,7 +136,7 @@ export default function AdminDashboardPage() {
               className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs"
             >
               <div className="space-y-1">
-                <div className="font-mono text-[11px] text-blue-900 font-bold">
+                <div className="font-mono text-[11px] text-red-700 font-bold">
                   {item.type} • {item.author}
                 </div>
                 <p className="text-slate-800 font-medium">{item.content}</p>
@@ -189,7 +189,7 @@ export default function AdminDashboardPage() {
             type="button"
             onClick={handleTriggerSync}
             disabled={syncing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold disabled:opacity-50 transition-colors shadow-sm shrink-0"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-700 hover:bg-red-800 text-white text-xs font-bold disabled:opacity-50 transition-colors shadow-sm shrink-0"
           >
             <RefreshCw className={`w-4 h-4 ${syncing ? "animate-spin" : ""}`} />
             {syncing ? "Sincronizando com PNCP e SIURB..." : "Disparar Sincronização Oficial Agora"}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -8,45 +8,68 @@ import {
   Menu,
   X,
   UserCheck,
-  AlertTriangle,
-  Info,
   Scale,
   CheckCircle2,
+  FileText,
+  Building2,
+  AlertOctagon,
+  TrendingDown,
+  HelpCircle,
+  Info,
+  Lock,
 } from "lucide-react";
+import { Logo } from "./Logo";
 
 const NAV_ITEMS = [
-  { label: "Início", href: "/" },
-  { label: "Licitações", href: "/licitacoes" },
-  { label: "Empresas", href: "/empresas" },
-  { label: "Obras atrasadas", href: "/obras-atrasadas" },
-  { label: "Ranking de problemas", href: "/contratacoes-atencao" },
-  { label: "Como funciona", href: "/como-funciona" },
-  { label: "Sobre o projeto", href: "/sobre" },
+  { label: "Início", href: "/", icon: null },
+  { label: "Licitações", href: "/licitacoes", icon: FileText },
+  { label: "Empresas", href: "/empresas", icon: Building2 },
+  { label: "Obras atrasadas", href: "/obras-atrasadas", icon: AlertOctagon },
+  { label: "Ranking de atenção", href: "/contratacoes-atencao", icon: TrendingDown },
+  { label: "Como funciona", href: "/como-funciona", icon: HelpCircle },
+  { label: "Sobre o projeto", href: "/sobre", icon: Info },
 ];
 
 export function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Fecha o menu mobile automaticamente ao trocar de rota
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Bloqueia rolagem do body quando o menu mobile está aberto
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileOpen]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
-      {/* Faixa permanente de independência institucional e identificação explícita da Fase 1 */}
-      <div className="bg-slate-900 text-slate-100 text-xs py-2 px-4 border-b border-slate-800">
+    <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur-md">
+      {/* Faixa permanente de independência institucional com estilo cívico paulista */}
+      <div className="bg-neutral-950 text-neutral-100 text-xs py-2 px-4 border-b border-red-900/40">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Scale className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span>
-              <strong>Plataforma Cidadã Independente:</strong> Este observatório{" "}
-              <span className="underline decoration-amber-400/80">
-                não pertence nem representa a Prefeitura de São Paulo
+            <Scale className="w-3.5 h-3.5 text-red-500 shrink-0" />
+            <span className="leading-tight">
+              <strong className="text-white">Plataforma Cidadã Independente:</strong> Este observatório{" "}
+              <span className="underline decoration-red-500/80 font-medium">
+                não pertence nem representa o governo ou prefeitura
               </span>{" "}
               e não possui efeito jurídico sobre licitações.
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
-              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-              FASE 2: BASES OFICIAIS INTEGRADAS
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-red-950/80 text-red-300 border border-red-700/50">
+              <CheckCircle2 className="w-3 h-3 text-red-400" />
+              SÃO PAULO • DADOS OFICIAIS
             </span>
           </div>
         </div>
@@ -54,23 +77,13 @@ export function Header() {
 
       {/* Barra principal de navegação */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
-          {/* Identidade Visual Editorial */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-mono font-bold text-lg tracking-tighter shadow-sm group-hover:bg-blue-900 transition-colors">
-              OC<span className="text-amber-400">SP</span>
-            </div>
-            <div>
-              <div className="font-bold text-slate-900 text-base leading-tight tracking-tight">
-                Observatório Cidadão
-              </div>
-              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
-                São Paulo • Fiscalização Pública
-              </div>
-            </div>
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+          {/* Logo Oficial Paulista */}
+          <Link href="/" className="group py-1 shrink-0">
+            <Logo size="md" />
           </Link>
 
-          {/* Menu Principal Desktop (7 itens obrigatórios da Seção 4) */}
+          {/* Menu Principal Desktop */}
           <nav
             aria-label="Navegação Principal"
             className="hidden xl:flex items-center gap-1"
@@ -84,10 +97,10 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 rounded-md text-sm font-semibold transition-all ${
                     isActive
-                      ? "bg-slate-900 text-white"
-                      : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                      ? "bg-neutral-900 text-white shadow-sm border-b-2 border-red-600"
+                      : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950"
                   }`}
                 >
                   {item.label}
@@ -96,86 +109,94 @@ export function Header() {
             })}
           </nav>
 
-          {/* Acesso à conta do usuário no cabeçalho (Seção 4) */}
-          <div className="hidden md:flex items-center gap-2 shrink-0">
+          {/* Acesso à conta e painel admin */}
+          <div className="hidden md:flex items-center gap-2.5 shrink-0">
             <Link
               href="/admin"
-              className="px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-md hover:bg-slate-50 transition-colors"
-              title="Painel Administrativo e Auditoria"
+              className="px-3 py-2 text-xs font-semibold text-neutral-700 hover:text-neutral-950 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition-colors flex items-center gap-1.5"
+              title="Painel de Auditoria e Fontes de Dados"
             >
-              Painel Admin
+              <Lock className="w-3.5 h-3.5 text-neutral-500" />
+              <span>Painel Admin</span>
             </Link>
             <Link
               href="/conta"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-blue-900 text-white hover:bg-slate-900 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold bg-red-700 hover:bg-red-800 text-white transition-all shadow-sm border border-red-800 active:scale-95"
             >
-              <UserCheck className="w-4 h-4 text-emerald-300" />
+              <UserCheck className="w-4 h-4 text-white" />
               <span>Conta Cidadã (CPF)</span>
             </Link>
           </div>
 
-          {/* Botão Mobile */}
+          {/* Botão Mobile Hamburger */}
           <div className="flex xl:hidden items-center gap-2">
             <Link
               href="/conta"
-              className="inline-flex md:hidden items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold bg-blue-900 text-white"
+              className="inline-flex md:hidden items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold bg-red-700 text-white shadow-sm"
             >
               <UserCheck className="w-3.5 h-3.5" />
-              <span>Conta</span>
+              <span>Entrar</span>
             </Link>
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900"
+              className="p-2.5 rounded-lg text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-red-600 transition-colors"
               aria-expanded={mobileOpen}
               aria-label="Abrir menu de navegação"
             >
-              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileOpen ? <X className="w-6 h-6 text-red-700" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Menu Mobile Responsivo */}
+      {/* Drawer / Menu Mobile com Overlay suave */}
       {mobileOpen && (
-        <div className="xl:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-5 space-y-1.5 shadow-lg">
-          {NAV_ITEMS.map((item) => {
-            const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
-            return (
+        <div className="xl:hidden fixed inset-0 top-[105px] z-50 bg-black/60 backdrop-blur-sm transition-opacity">
+          <div className="bg-white border-b border-neutral-200 px-5 pt-4 pb-8 space-y-2 shadow-2xl max-h-[calc(100vh-105px)] overflow-y-auto">
+            <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider px-3 pb-1">
+              Menu de Navegação
+            </div>
+
+            {NAV_ITEMS.map((item) => {
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
+              const Icon = item.icon;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-semibold transition-colors ${
+                    isActive
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-700 font-bold"
+                      : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900"
+                  }`}
+                >
+                  {Icon && <Icon className={`w-4 h-4 ${isActive ? "text-red-700" : "text-neutral-500"}`} />}
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+
+            <div className="pt-4 mt-4 border-t border-neutral-200 space-y-2.5">
               <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-3 py-2.5 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-700 hover:bg-slate-100"
-                }`}
+                href="/conta"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold bg-red-700 text-white shadow-sm"
               >
-                {item.label}
+                <ShieldCheck className="w-4 h-4" />
+                Acessar Conta Verificada por CPF
               </Link>
-            );
-          })}
-          <div className="pt-3 mt-3 border-t border-slate-200 flex flex-col sm:flex-row gap-2">
-            <Link
-              href="/conta"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-blue-900 text-white"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              Acessar Conta Verificada (CPF)
-            </Link>
-            <Link
-              href="/admin"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border border-slate-300 text-slate-700"
-            >
-              <Info className="w-4 h-4" />
-              Painel Administrativo & Auditoria
-            </Link>
+              <Link
+                href="/admin"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+              >
+                <Lock className="w-4 h-4 text-neutral-500" />
+                Painel Administrativo & Auditoria
+              </Link>
+            </div>
           </div>
         </div>
       )}

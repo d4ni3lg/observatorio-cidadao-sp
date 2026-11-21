@@ -109,6 +109,7 @@ export default function LicitacaoDetailPage() {
           procurementId: procurement.id,
           voteType: selectedVote,
           justification,
+          _hp: "",
         }),
       });
 
@@ -165,7 +166,7 @@ export default function LicitacaoDetailPage() {
             onClick={() => setShowShareReport(!showShareReport)}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-slate-300 bg-white text-xs font-semibold text-slate-800 hover:bg-slate-50"
           >
-            <Share2 className="w-3.5 h-3.5 text-blue-800" />
+            <Share2 className="w-3.5 h-3.5 text-red-700" />
             Gerar Relatório Compartilhável
           </button>
           <button
@@ -245,7 +246,7 @@ export default function LicitacaoDetailPage() {
       <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-blue-50 text-blue-900 border border-blue-200">
+            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-red-50 text-red-700 border border-red-200">
               SEÇÃO A • IDENTIFICAÇÃO OFICIAL
             </span>
             <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
@@ -258,7 +259,7 @@ export default function LicitacaoDetailPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-xs font-semibold uppercase tracking-wider text-blue-900">
+          <div className="text-xs font-semibold uppercase tracking-wider text-red-700">
             {procurement.secretariat}
           </div>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">
@@ -296,7 +297,7 @@ export default function LicitacaoDetailPage() {
           </div>
           <div>
             <span className="text-slate-500 block">Data de Abertura / Sessão</span>
-            <strong className="font-mono text-blue-900">
+            <strong className="font-mono text-red-700">
               {formatDateTimeBR(procurement.sessionDate)}
             </strong>
           </div>
@@ -430,7 +431,7 @@ export default function LicitacaoDetailPage() {
       <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-blue-50 text-blue-900 border border-blue-200 inline-flex items-center gap-1.5">
+            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-red-50 text-red-700 border border-red-200 inline-flex items-center gap-1.5">
               <Bot className="w-4 h-4" />
               SEÇÃO B • TRADUÇÃO CIDADÃ EM LINGUAGEM SIMPLES
             </span>
@@ -443,7 +444,7 @@ export default function LicitacaoDetailPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Pergunta 1 */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-700">
               1. O que a Prefeitura pretende comprar ou contratar?
             </h3>
             <p className="text-sm text-slate-800 leading-relaxed">
@@ -457,7 +458,7 @@ export default function LicitacaoDetailPage() {
 
           {/* Pergunta 2 */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-700">
               2. Qual é a finalidade da contratação?
             </h3>
             <p className="text-sm text-slate-800 leading-relaxed">
@@ -471,7 +472,7 @@ export default function LicitacaoDetailPage() {
 
           {/* Pergunta 3 */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-700">
               3. Onde será utilizado?
             </h3>
             <p className="text-sm text-slate-800 leading-relaxed">
@@ -485,7 +486,7 @@ export default function LicitacaoDetailPage() {
 
           {/* Pergunta 4 */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-700">
               4. Qual é o valor estimado e como foi calculado?
             </h3>
             <p className="text-sm text-slate-800 leading-relaxed">
@@ -499,7 +500,7 @@ export default function LicitacaoDetailPage() {
 
           {/* Pergunta 5 */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-700">
               5. Qual é o prazo previsto?
             </h3>
             <p className="text-sm text-slate-800 leading-relaxed">
@@ -513,7 +514,7 @@ export default function LicitacaoDetailPage() {
 
           {/* Pergunta 6 */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-700">
               6. Quem será beneficiado?
             </h3>
             <p className="text-sm text-slate-800 leading-relaxed">
@@ -537,15 +538,15 @@ export default function LicitacaoDetailPage() {
         )}
 
         {procurement.aiSummary.glossary && procurement.aiSummary.glossary.length > 0 && (
-          <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-200/90 space-y-3">
-            <h4 className="text-xs font-mono uppercase font-bold text-blue-900 flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4 text-blue-700" />
+          <div className="p-4 rounded-xl bg-red-50/70 border border-red-200/90 space-y-3">
+            <h4 className="text-xs font-mono uppercase font-bold text-red-700 flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-red-600" />
               Glossário Cidadão: Termos Técnicos Desta Contratação Explicados (Regra 9)
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
               {procurement.aiSummary.glossary.map((item, idx) => (
-                <div key={idx} className="p-3 bg-white rounded-lg border border-blue-100">
-                  <strong className="text-blue-950 block">{item.term}</strong>
+                <div key={idx} className="p-3 bg-white rounded-lg border border-red-100">
+                  <strong className="text-red-950 block">{item.term}</strong>
                   <p className="text-slate-600 mt-0.5 leading-relaxed">{item.simpleExplanation}</p>
                 </div>
               ))}
@@ -581,7 +582,7 @@ export default function LicitacaoDetailPage() {
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-900 text-white">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-red-700 text-white">
                       {part.rankingPosition
                         ? `${part.rankingPosition}º Lugar na Disputa`
                         : "Proposta Cadastrada"}
@@ -626,7 +627,7 @@ export default function LicitacaoDetailPage() {
                   </span>
                   <Link
                     href={`/empresas/${part.cnpjNormalized}`}
-                    className="inline-flex items-center gap-1 font-semibold text-blue-800 hover:underline"
+                    className="inline-flex items-center gap-1 font-semibold text-red-700 hover:underline"
                   >
                     <Building2 className="w-3.5 h-3.5" />
                     Abrir perfil da empresa →
@@ -711,7 +712,7 @@ export default function LicitacaoDetailPage() {
                       <div className="w-full h-3 rounded-full bg-slate-200 overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
-                            bid.isWinningBid ? "bg-emerald-600" : "bg-blue-800"
+                            bid.isWinningBid ? "bg-emerald-600" : "bg-red-800"
                           }`}
                           style={{ width: `${pctOfEstimated}%` }}
                         />
@@ -783,7 +784,7 @@ export default function LicitacaoDetailPage() {
               href={doc.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-4 rounded-xl border border-slate-200 hover:border-blue-800 hover:bg-blue-50/30 transition-all flex flex-col justify-between gap-3 group"
+              className="p-4 rounded-xl border border-slate-200 hover:border-red-800 hover:bg-red-50/30 transition-all flex flex-col justify-between gap-3 group"
             >
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
@@ -792,12 +793,12 @@ export default function LicitacaoDetailPage() {
                   </span>
                   <span className="font-mono">{formatDateBR(doc.publishedAt)}</span>
                 </div>
-                <div className="font-semibold text-sm text-slate-900 group-hover:text-blue-900 flex items-start gap-2">
-                  <FileText className="w-4 h-4 shrink-0 mt-0.5 text-blue-800" />
+                <div className="font-semibold text-sm text-slate-900 group-hover:text-red-700 flex items-start gap-2">
+                  <FileText className="w-4 h-4 shrink-0 mt-0.5 text-red-700" />
                   <span>{doc.title}</span>
                 </div>
               </div>
-              <div className="text-xs font-semibold text-blue-800 inline-flex items-center gap-1">
+              <div className="text-xs font-semibold text-red-700 inline-flex items-center gap-1">
                 Consultar na fonte original ({doc.sourceName})
                 <ExternalLink className="w-3.5 h-3.5" />
               </div>

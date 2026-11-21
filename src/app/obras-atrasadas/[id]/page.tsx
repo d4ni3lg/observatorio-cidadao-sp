@@ -80,7 +80,7 @@ export default function ObraDetailPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-xs font-semibold uppercase tracking-wider text-blue-900">
+          <div className="text-xs font-semibold uppercase tracking-wider text-red-700">
             {work.secretariat} • {work.subprefecture}
           </div>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-900">
@@ -93,7 +93,7 @@ export default function ObraDetailPage() {
           <div>
             <span className="text-slate-500 block">Localização / Endereço</span>
             <strong className="text-slate-900 flex items-center gap-1 mt-0.5">
-              <MapPin className="w-3.5 h-3.5 text-blue-800 shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-red-700 shrink-0" />
               {work.addressLocation}
             </strong>
           </div>
@@ -101,7 +101,7 @@ export default function ObraDetailPage() {
             <span className="text-slate-500 block">Empresa Contratada & CNPJ</span>
             <Link
               href={`/empresas/${work.companyCnpjFormatted.replace(/\D/g, "")}`}
-              className="font-bold text-blue-900 hover:underline block mt-0.5"
+              className="font-bold text-red-700 hover:underline block mt-0.5"
             >
               {work.companyName} ({work.companyCnpjFormatted})
             </Link>
@@ -231,11 +231,11 @@ export default function ObraDetailPage() {
               {formatBRL(work.costs.committedAmount)}
             </strong>
           </div>
-          <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
-            <span className="text-blue-900 block font-medium">
+          <div className="p-4 rounded-xl bg-red-50 border border-red-200">
+            <span className="text-red-700 block font-medium">
               5. Valor Pago (Financeiro)
             </span>
-            <strong className="font-mono text-sm text-blue-950 mt-1 block">
+            <strong className="font-mono text-sm text-red-950 mt-1 block">
               {formatBRL(work.costs.paidAmount)}
             </strong>
           </div>
@@ -284,16 +284,16 @@ export default function ObraDetailPage() {
           <div className="space-y-3 text-xs">
             <div>
               <div className="flex justify-between mb-1">
-                <span className="font-semibold text-blue-900">
+                <span className="font-semibold text-red-700">
                   Percentual Financeiro Executado (Valor Pago / Valor Atualizado)
                 </span>
-                <span className="font-mono font-bold text-blue-900">
+                <span className="font-mono font-bold text-red-700">
                   {work.costs.financialExecutionPct}% ({formatBRL(work.costs.paidAmount)})
                 </span>
               </div>
               <div className="w-full h-3.5 rounded-full bg-slate-200 overflow-hidden">
                 <div
-                  className="bg-blue-700 h-full rounded-full"
+                  className="bg-red-700 h-full rounded-full"
                   style={{ width: `${work.costs.financialExecutionPct}%` }}
                 />
               </div>

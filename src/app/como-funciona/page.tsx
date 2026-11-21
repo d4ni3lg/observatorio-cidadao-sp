@@ -77,7 +77,7 @@ export default function ComoFuncionaPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       <div className="space-y-3">
-        <div className="text-xs font-mono uppercase tracking-wider text-blue-800 font-semibold">
+        <div className="text-xs font-mono uppercase tracking-wider text-red-700 font-semibold">
           Seção 6 do Menu Principal • Metodologia, Fontes, IA e Segurança
         </div>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-900">
@@ -94,7 +94,7 @@ export default function ComoFuncionaPage() {
       {/* 1. As 6 Fontes Oficiais e Frequência de Sincronização (Seção 11) */}
       <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-          <Database className="w-6 h-6 text-blue-800" />
+          <Database className="w-6 h-6 text-red-700" />
           <div>
             <h2 className="font-display text-xl font-bold text-slate-900">
               1. Fontes Oficiais Prioritárias e Estratégia de Sincronização (Seção 11)
@@ -115,7 +115,7 @@ export default function ComoFuncionaPage() {
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded bg-blue-900 text-white font-mono text-xs font-bold">
+                  <span className="px-2.5 py-0.5 rounded bg-red-700 text-white font-mono text-xs font-bold">
                     {src.code}
                   </span>
                   <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-800">
@@ -139,7 +139,7 @@ export default function ComoFuncionaPage() {
                   href={src.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 font-semibold text-blue-800 hover:underline"
+                  className="inline-flex items-center gap-1 font-semibold text-red-700 hover:underline"
                 >
                   Acessar portal/documentação oficial
                   <ExternalLink className="w-3 h-3" />
