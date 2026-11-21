@@ -183,7 +183,7 @@ export function Footer() {
 
         <div className="mt-10 pt-6 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
           <div className="flex items-center gap-2">
-            <span>Farol Cidadão de São Paulo • Versão 1.5.0 • PWA & Controle Social Paulista</span>
+            <span>Farol Cidadão de São Paulo • Versão 1.5.1 • PWA & Controle Social Paulista</span>
             <Link
               href="/admin"
               className="text-neutral-800 hover:text-neutral-500 transition-colors inline-flex items-center"

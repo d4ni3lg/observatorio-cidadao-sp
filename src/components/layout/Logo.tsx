@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useOnlineStatus } from "@/lib/pwa/useOnlineStatus";
+import { usePwa } from "@/components/pwa/PwaContext";
 
 interface LogoProps {
   className?: string;
@@ -16,15 +16,15 @@ export function Logo({
   size = "md",
   offline,
 }: LogoProps) {
-  const { isOffline: hookOffline } = useOnlineStatus();
+  const { isOffline } = usePwa();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Se 'offline' foi passado explicitamente usa ele; senão usa o hook quando montado no cliente
-  const isFarolApagado = offline !== undefined ? offline : mounted && hookOffline;
+  // Se 'offline' foi passado explicitamente usa ele; senão usa o estado global do PWA
+  const isFarolApagado = offline !== undefined ? offline : mounted && isOffline;
 
   const iconDimensions = {
     sm: "w-8 h-8",

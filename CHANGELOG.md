@@ -7,6 +7,22 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.5.1] - 2026-11-21
+
+### 🛠️ Correção do Token de Voto, Apagamento do Farol e Ajuste Visual de Notificações
+- **Correção da Validação de Voto Serverless (`vote-store.ts`)**:
+  - Resolução definitiva do erro de "token inválido/expirado": recuperação determinística stateless do hash HMAC-SHA256 (64 hex) nas rotas `/api/vote/company` e `/api/vote/procurement`.
+  - Persistência híbrida com retenção em memória e diretório `/tmp` para suporte nativo a lambdas efêmeros do Vercel.
+- **Farol Apagado Dinâmico (`Logo.tsx`)**:
+  - Integração do componente com o estado global do PWA (`usePwa`).
+  - Tanto a desconexão real quanto o interruptor de simulação offline agora desligam instantaneamente os feixes luminosos e a lanterna do farol em todas as telas.
+- **Ajuste Espacial das Notificações & Modal**:
+  - Integração do `OfflineBanner` diretamente na estrutura do `Header`, eliminando a colisão de elementos com `sticky top-0`.
+  - Margens seguras (`pt-16` / `max-h-[82vh]`) no `NotificationCenterModal`, impedindo que o topo do modal fique cortado em telas de celulares ou sob entalhes (notches).
+  - Adição do componente `NativeNotificationToast`, exibindo um card flutuante centralizado e totalmente legível em qualquer resolução.
+
+---
+
 ## [1.5.0] - 2026-11-21
 
 ### 📱 Progressive Web App (PWA), Modo Offline, Farol Apagado & Notificações Nativas

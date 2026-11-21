@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Logo } from "./Logo";
 import { NotificationCenterModal } from "@/components/pwa/NotificationCenterModal";
+import { OfflineBanner } from "@/components/pwa/OfflineBanner";
 
 const NAV_ITEMS = [
   { label: "Início", href: "/", icon: null },
@@ -55,6 +56,9 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur-md">
+      {/* Notificação Fixa de Modo Offline (visível se sem conexão ou teste simulado) */}
+      <OfflineBanner />
+
       {/* Faixa permanente de independência institucional com estilo cívico paulista */}
       <div className="bg-neutral-950 text-neutral-100 text-xs py-2 px-4 border-b border-red-900/40">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">

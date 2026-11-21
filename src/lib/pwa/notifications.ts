@@ -46,6 +46,24 @@ export async function triggerNativeNotification(
   title: string,
   options?: CivicNotificationOptions
 ): Promise<boolean> {
+  // Sempre emite evento in-app para exibição imediata no toast visual ajustado na tela
+  if (typeof window !== "undefined") {
+    try {
+      window.dispatchEvent(
+        new CustomEvent("civic_notification", {
+          detail: {
+            title,
+            body: options?.body,
+            icon: options?.icon,
+            tag: options?.tag,
+          },
+        })
+      );
+    } catch (e) {
+      console.warn("Falha ao emitir evento civic_notification:", e);
+    }
+  }
+
   if (!isNotificationSupported()) return false;
 
   if (Notification.permission !== "granted") {

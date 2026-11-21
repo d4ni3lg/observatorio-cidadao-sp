@@ -111,10 +111,10 @@ export function NotificationCenterModal({ isOpen, onClose }: NotificationCenterM
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-white rounded-3xl border border-neutral-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md overflow-y-auto pt-16 sm:pt-6 pb-6 animate-in fade-in duration-200">
+      <div className="w-full max-w-lg bg-white rounded-3xl border border-neutral-200 shadow-2xl overflow-hidden flex flex-col max-h-[82vh] my-auto">
         {/* Topo do Modal */}
-        <div className="px-6 py-5 bg-neutral-950 text-white flex items-center justify-between border-b border-red-950">
+        <div className="px-5 sm:px-6 py-4 sm:py-5 bg-neutral-950 text-white flex items-center justify-between border-b border-red-950 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-red-600/20 border border-red-600/40 flex items-center justify-center text-red-400">
               <BellRing className="w-5 h-5 animate-pulse" />

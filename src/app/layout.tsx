@@ -5,9 +5,9 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { PwaProvider } from "@/components/pwa/PwaContext";
-import { OfflineBanner } from "@/components/pwa/OfflineBanner";
 import { UpdateToast } from "@/components/pwa/UpdateToast";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
+import { NativeNotificationToast } from "@/components/pwa/NativeNotificationToast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -62,10 +62,10 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col font-sans bg-neutral-50 text-neutral-900 antialiased selection:bg-red-700 selection:text-white">
         <PwaProvider>
-          {/* Notificação Fixa de Modo Offline */}
-          <OfflineBanner />
+          {/* Notificação Flutuante de Alertas Cívicos (perfeitamente centralizada e visível) */}
+          <NativeNotificationToast />
 
-          {/* Cabeçalho Oficial */}
+          {/* Cabeçalho Oficial (contém o OfflineBanner integrado) */}
           <Header />
 
           {/* Conteúdo Principal */}

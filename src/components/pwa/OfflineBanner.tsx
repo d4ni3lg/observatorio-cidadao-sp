@@ -10,7 +10,7 @@ export function OfflineBanner() {
   if (!isOffline) return null;
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-zinc-950 text-white border-b-2 border-amber-500 shadow-2xl transition-all duration-300">
+    <div className="w-full bg-zinc-950 text-white border-b-2 border-amber-500 shadow-xl transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           {/* Lado Esquerdo: Ícone e Texto Principal */}

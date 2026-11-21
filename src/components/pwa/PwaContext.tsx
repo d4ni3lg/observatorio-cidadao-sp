@@ -198,7 +198,21 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
 export function usePwa() {
   const context = useContext(PwaContext);
   if (!context) {
-    throw new Error("usePwa deve ser utilizado dentro de um PwaProvider.");
+    const isOnline = typeof navigator !== "undefined" ? navigator.onLine : true;
+    return {
+      isOnline,
+      isOffline: !isOnline,
+      simulatedOffline: false,
+      toggleSimulatedOffline: () => {},
+      updateAvailable: false,
+      applyUpdate: () => {},
+      notificationPermission: "default" as NotificationPermission,
+      requestPermission: async () => "default" as NotificationPermission,
+      sendNotification: async () => false,
+      canInstall: false,
+      triggerInstall: async () => {},
+      offlineQueueCount: 0,
+    };
   }
   return context;
 }
