@@ -7,6 +7,13 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.2.2] - 2026-11-21
+
+### 🛡️ Atualização de Segurança (CVE-2025-66478)
+- **Atualização do Next.js para `^15.1.9`**: Correção de segurança obrigatória para mitigar a vulnerabilidade em React Server Components (React2Shell / CVE-2025-66478), desbloqueando o deploy em produção na Vercel.
+
+---
+
 ## [1.2.1] - 2026-11-21
 
 ### 🔧 Correção de Build Web (Vercel) e Variáveis de Ambiente
