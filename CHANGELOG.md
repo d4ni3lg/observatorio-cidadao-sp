@@ -7,6 +7,15 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.2.1] - 2026-11-21
+
+### 🔧 Correção de Build Web (Vercel) e Variáveis de Ambiente
+- **Configuração Automática das Variáveis de Ambiente na Vercel**: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` injetadas em Produção, Preview e Desenvolvimento.
+- **Inclusão da Dependência Explícita `react-is`**: Correção de resolução de módulo (`Can't resolve 'react-is'`) exigida pelo Recharts 3.x no ecossistema Next.js 15 / React 19 durante a compilação do Webpack na Vercel.
+- **Validação Completa de Build**: Compilação local com sucesso gerando todas as 17 rotas estáticas e dinâmicas da plataforma.
+
+---
+
 ## [1.2.0] - 2026-11-21
 
 ### 🚀 Migração Efetiva para Nuvem (Supabase) Concluída
