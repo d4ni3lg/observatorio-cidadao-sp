@@ -1,6 +1,6 @@
 {
   "name": "observatorio-cidadao-sp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Plataforma independente de transparência, participação popular e fiscalização cidadã do Município de São Paulo.",
   "scripts": {
@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "release": "node scripts/github-sync.js"
+    "release": "node scripts/github-sync.js",
+    "db:seed": "node scripts/seed-supabase.js"
   },
   "dependencies": {
     "lucide-react": "^0.460.0",

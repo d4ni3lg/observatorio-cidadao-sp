@@ -7,6 +7,16 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.1.0] - 2026-11-21
+
+### 🚀 Banco de Dados em Nuvem (Supabase) e Deploy Vercel
+- **DDL PostgreSQL para Supabase (`supabase/schema.sql`)**: 20 tabelas relacionais com chaves primárias, estrangeiras, índices e views agregadas de votos cidadãos.
+- **Script de Ingestão e Migração Oficial (`scripts/seed-supabase.js`)**: Transferência automática de 92 empresas reais, 15 licitações e itens PCA 2027, 20 obras públicas atrasadas com cronogramas e balanço físico vs. financeiro para o Supabase.
+- **Cliente Supabase Universal (`src/lib/supabase/client.ts`)**: Suporte a consultas e inserções em nuvem com fallback automático.
+- **Otimização de Deploy Vercel (`.npmrc`)**: Configuração de `legacy-peer-deps=true` para resolução segura de dependências com React 19.
+
+---
+
 ## [1.0.0] - 2026-11-21
 
 ### ✨ Lançamento Inicial Oficial (Fases 1, 2, 3, 4 e 5)
