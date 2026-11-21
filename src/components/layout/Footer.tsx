@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ExternalLink, Shield, Database, Scale, FileText } from "lucide-react";
+import { ExternalLink, Shield, Database, Scale, FileText, Lock } from "lucide-react";
 import { Logo } from "./Logo";
 
 export function Footer() {
@@ -182,10 +182,18 @@ export function Footer() {
         </div>
 
         <div className="mt-10 pt-6 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
-          <div>
-            Observatório Cidadão de São Paulo • Versão 1.3.0 • Controle Social Paulista
+          <div className="flex items-center gap-2">
+            <span>Farol Cidadão de São Paulo • Versão 1.4.1 • Controle Social Paulista</span>
+            <Link
+              href="/admin"
+              className="text-neutral-800 hover:text-neutral-500 transition-colors inline-flex items-center"
+              title="Acesso Restrito ao Sistema"
+              aria-label="Acesso Restrito"
+            >
+              <Lock className="w-3 h-3 opacity-30 hover:opacity-100" />
+            </Link>
           </div>
-          <div className="font-mono text-[11px] text-red-400">
+          <div className="font-mono text-[11px] text-red-500/80">
             [SEGURANÇA REFORÇADA • RATE LIMITING • CRIPTOGRAFIA HMAC • LGPD]
           </div>
         </div>

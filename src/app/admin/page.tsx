@@ -159,12 +159,6 @@ export default function AdminDashboardPage() {
     setLoginError(null);
   };
 
-  const fillDemoCredentials = () => {
-    setUsernameInput("admin");
-    setPasswordInput("Farol@SP2026!");
-    setLoginError(null);
-  };
-
   const handleTriggerSync = async () => {
     setSyncing(true);
     setSyncMsg(null);
@@ -324,25 +318,11 @@ export default function AdminDashboardPage() {
               </button>
             </form>
 
-            {/* Destaque de Credenciais de Demonstração para a Apresentação */}
-            <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 text-xs space-y-2">
-              <div className="font-bold text-neutral-800 flex items-center justify-between">
-                <span>🔑 Credenciais de Apresentação:</span>
-                <button
-                  type="button"
-                  onClick={fillDemoCredentials}
-                  className="text-[11px] font-bold text-red-700 hover:underline"
-                >
-                  Preencher dados
-                </button>
-              </div>
-              <div className="font-mono text-[11px] text-neutral-700 bg-white p-2 rounded border border-neutral-200 space-y-0.5">
-                <div><strong>Usuário:</strong> admin</div>
-                <div><strong>Senha:</strong> Farol@SP2026!</div>
-              </div>
-              <div className="text-[10px] text-neutral-500 leading-tight">
-                Protegido por Rate Limiting (máximo 5 tentativas) e comparação segura timing-safe.
-              </div>
+            <div className="pt-2 text-center">
+              <p className="text-[11px] text-neutral-400 flex items-center justify-center gap-1.5">
+                <Lock className="w-3 h-3 text-neutral-400" />
+                Ambiente seguro com registro em trilha de auditoria e controle de tentativas.
+              </p>
             </div>
           </div>
         </div>

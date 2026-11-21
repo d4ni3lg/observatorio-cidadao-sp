@@ -1,6 +1,6 @@
 {
   "name": "observatorio-cidadao-sp",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "description": "Plataforma independente de transparência, participação popular e fiscalização cidadã do Município de São Paulo.",
   "scripts": {

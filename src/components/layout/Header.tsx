@@ -16,7 +16,6 @@ import {
   TrendingDown,
   HelpCircle,
   Info,
-  Lock,
 } from "lucide-react";
 import { Logo } from "./Logo";
 
@@ -109,16 +108,8 @@ export function Header() {
             })}
           </nav>
 
-          {/* Acesso à conta e painel admin */}
+          {/* Acesso à conta do cidadão */}
           <div className="hidden md:flex items-center gap-2.5 shrink-0">
-            <Link
-              href="/admin"
-              className="px-3 py-2 text-xs font-semibold text-neutral-700 hover:text-neutral-950 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition-colors flex items-center gap-1.5"
-              title="Painel de Auditoria e Fontes de Dados"
-            >
-              <Lock className="w-3.5 h-3.5 text-neutral-500" />
-              <span>Painel Admin</span>
-            </Link>
             <Link
               href="/conta"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold bg-red-700 hover:bg-red-800 text-white transition-all shadow-sm border border-red-800 active:scale-95"
@@ -188,13 +179,6 @@ export function Header() {
               >
                 <ShieldCheck className="w-4 h-4" />
                 Acessar Conta Verificada por CPF
-              </Link>
-              <Link
-                href="/admin"
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-neutral-300 text-neutral-700 hover:bg-neutral-50"
-              >
-                <Lock className="w-4 h-4 text-neutral-500" />
-                Painel Administrativo & Auditoria
               </Link>
             </div>
           </div>

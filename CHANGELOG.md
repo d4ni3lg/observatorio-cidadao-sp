@@ -7,6 +7,16 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.4.1] - 2026-11-21
+
+### 🔒 Ocultação de Credenciais e Proteção Visual do Painel Administrativo
+- **Remoção de Credenciais Visuais**: Exclusão total do bloco de credenciais de teste e do botão de preenchimento automático na tela de login `/admin`.
+- **Discrição na Navegação Pública**: Remoção do botão ostensivo "Painel Admin" da barra de navegação superior (desktop) e do menu lateral gaveta (mobile).
+- **Acesso Oculto e Protegido**: Ponto de acesso mantido exclusivamente por rota direta (`/admin`) e através de indicador discreto no rodapé institucional.
+- **Segurança Ativa**: Rate limiting contra força bruta, tokens de sessão com assinatura HMAC-SHA256 em cookies `HttpOnly`, honeypots contra bots automatizados e comparação de senhas em tempo constante mantidos ativos.
+
+---
+
 ## [1.4.0] - 2026-11-21
 
 ### 🔐 Versão Definitiva para Apresentação & Autenticação do Painel Administrativo
