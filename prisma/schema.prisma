@@ -1,0 +1,509 @@
+// ============================================================================
+// OBSERVATÓRIO CIDADÃO DE SÃO PAULO — SCHEMA RELACIONAL COMPLETO (SEÇÃO 13.1)
+// Contempla rigorosamente as 20 entidades especificadas no Documento Mestre.
+// Regras:
+// - CPF nunca é armazenado em texto aberto (apenas token pseudonimizado / HMAC).
+// - Empresas são associadas exclusivamente por CNPJ normalizado (14 dígitos).
+// - Contratações diferenciam Licitações Publicadas de Planejamento (PCA).
+// - Custos distinguem Orçamento Estimado, Homologado, Contratado, Empenhado e Pago.
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CITIZEN
+  MODERATOR
+  AUDITOR
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  REVOKED
+}
+
+enum ProcurementRecordType {
+  PUBLISHED_BID // Licitação efetivamente publicada (Edital no PNCP / Diário Oficial)
+  PCA_PLANNING  // Contratação apenas prevista no Plano de Contratações Anual (Seção 2.1)
+}
+
+enum ProcurementStatus {
+  RECEIVING_PROPOSALS
+  SCHEDULED_SESSION
+  PUBLISHED_UPCOMING
+  IN_DISPUTE
+  UNDER_ANALYSIS
+  HOMOLOGATED
+  SUSPENDED
+  PCA_PLANNED
+}
+
+enum CompanyVoteType {
+  RECOMMEND
+  DO_NOT_RECOMMEND
+  NO_OPINION
+}
+
+enum ProcurementVoteType {
+  SUPPORT
+  OPPOSE
+  NEEDS_CLARIFICATION
+}
+
+enum ModerationStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED_OBJECTIVE_CRITERIA
+  FLAGGED_FOR_LEGAL_REVIEW
+}
+
+enum OccurrenceCategory {
+  CONTRACT_OCCURRENCE        // Ocorrência desta contratação específica
+  OTHER_CONTRACT_OCCURRENCE  // Ocorrência em outro contrato da mesma empresa
+  DEFINITIVE_PENALTY         // Penalidade administrativa definitiva
+  CONTROL_ORGAN_POINTING     // Apontamento de órgão de controle ainda em análise
+}
+
+// 1. users
+model User {
+  id                   String                @id @default(uuid())
+  displayName          String?               @map("display_name")
+  email                String                @unique
+  role                 UserRole              @default(CITIZEN)
+  mfaEnabled           Boolean               @default(false) @map("mfa_enabled")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+
+  identityVerification IdentityVerification?
+  companyVotes         CompanyVote[]
+  procurementVotes     ProcurementVote[]
+  comments             Comment[]
+  complaints           Complaint[]
+  auditLogs            AuditLog[]
+
+  @@map("users")
+}
+
+// 2. identity_verifications (LGPD & Guia ANPD: sem CPF em texto aberto)
+model IdentityVerification {
+  id                      String             @id @default(uuid())
+  userId                  String             @unique @map("user_id")
+  pseudonymizedCpfToken   String             @unique @map("pseudonymized_cpf_token") // HMAC-SHA256 irreversível com hardware pepper
+  verificationProvider    String             @map("verification_provider")
+  providerReferenceId     String?            @map("provider_reference_id")
+  status                  VerificationStatus @default(PENDING)
+  spResidencyVerified     Boolean            @default(false) @map("sp_residency_verified")
+  legalBasisConsentAt     DateTime           @map("legal_basis_consent_at")
+  verifiedAt              DateTime?          @map("verified_at")
+  createdAt               DateTime           @default(now()) @map("created_at")
+
+  user                    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("identity_verifications")
+}
+
+// 3. companies (Associação exclusiva por CNPJ normalizado de 14 dígitos)
+model Company {
+  id                         String               @id @default(uuid())
+  cnpjNormalized             String               @unique @map("cnpj_normalized") // Ex: "12345678000190"
+  cnpjFormatted              String               @map("cnpj_formatted")  // Ex: "12.345.678/0001-90"
+  legalName                  String               @map("legal_name")
+  tradeName                  String?              @map("trade_name")
+  registrationStatus         String               @map("registration_status")
+  identifiedProcurementsCount Int                 @default(0) @map("identified_procurements_count")
+  identifiedContractsCount   Int                  @default(0) @map("identified_contracts_count")
+  totalContractedAmount      Decimal              @default(0) @db.Decimal(18, 2) @map("total_contracted_amount")
+  companyPublicStatement     String?              @map("company_public_statement") // Direito de manifestação/correção empresarial
+  isDemoData                 Boolean              @default(false) @map("is_demo_data")
+  lastSyncedAt               DateTime             @map("last_synced_at")
+  createdAt                  DateTime             @default(now()) @map("created_at")
+
+  bids                       ProcurementBid[]
+  contracts                  Contract[]
+  publicWorks                PublicWork[]
+  occurrences                ContractOccurrence[]
+  votes                      CompanyVote[]
+  comments                   Comment[]
+
+  @@index([cnpjNormalized])
+  @@map("companies")
+}
+
+// 4. procurements (Licitações e Planejamento PCA 2026/2027)
+model Procurement {
+  id                      String                 @id @default(uuid())
+  pncpControlNumber       String                 @unique @map("pncp_control_number")
+  processNumber           String                 @map("process_number")
+  recordType              ProcurementRecordType  @default(PUBLISHED_BID) @map("record_type")
+  simplifiedTitle         String                 @map("simplified_title")
+  originalObject          String                 @map("original_object")
+  secretariat             String
+  purchasingUnit          String                 @map("purchasing_unit")
+  modality                String
+  category                String
+  region                  String?
+  status                  ProcurementStatus
+  publishedAt             DateTime?              @map("published_at")
+  proposalOpeningAt       DateTime?              @map("proposal_opening_at")
+  publicSessionAt         DateTime?              @map("public_session_at")
+  plannedPeriod           String?                @map("planned_period") // Para PCA: ex. "1º Trimestre 2027"
+
+  // Separação estrita de custos (Seção 6.2.C e Regra 10)
+  isBudgetConfidential    Boolean                @default(false) @map("is_budget_confidential")
+  estimatedValue          Decimal?               @db.Decimal(18, 2) @map("estimated_value")
+  maxAcceptableValue      Decimal?               @db.Decimal(18, 2) @map("max_acceptable_value")
+  homologatedValue        Decimal?               @db.Decimal(18, 2) @map("homologated_value")
+  contractedValue         Decimal?               @db.Decimal(18, 2) @map("contracted_value")
+  paidValue               Decimal?               @db.Decimal(18, 2) @map("paid_value")
+
+  // Resumo IA ancorado em documentos oficiais (Seção 6.2.B e Seção 12)
+  aiPlainSummaryJson      Json?                  @map("ai_plain_summary_json")
+  sourceUrl               String                 @map("source_url")
+  dataSourceId            String                 @map("data_source_id")
+  isDemoData              Boolean                @default(false) @map("is_demo_data")
+  lastSyncedAt            DateTime               @map("last_synced_at")
+  createdAt               DateTime               @default(now()) @map("created_at")
+
+  dataSource              DataSource             @relation(fields: [dataSourceId], references: [id])
+  documents               ProcurementDocument[]
+  bids                    ProcurementBid[]
+  events                  ProcurementEvent[]
+  contracts               Contract[]
+  votes                   ProcurementVote[]
+  comments                Comment[]
+  publicReports           PublicReport[]
+
+  @@index([recordType, status, publicSessionAt])
+  @@map("procurements")
+}
+
+// 5. procurement_documents
+model ProcurementDocument {
+  id              String      @id @default(uuid())
+  procurementId   String      @map("procurement_id")
+  documentType    String      @map("document_type") // Edital, Termo de Referência, ETP, Ata, Proposta, Contrato, Aditivo
+  title           String
+  officialUrl     String      @map("official_url")
+  publishedAt     DateTime    @map("published_at")
+  fileHashSha256  String?     @map("file_hash_sha256")
+
+  procurement     Procurement @relation(fields: [procurementId], references: [id], onDelete: Cascade)
+
+  @@map("procurement_documents")
+}
+
+// 6. procurement_bids
+model ProcurementBid {
+  id                   String      @id @default(uuid())
+  procurementId        String      @map("procurement_id")
+  companyId            String      @map("company_id")
+  initialProposalValue Decimal?    @db.Decimal(18, 2) @map("initial_proposal_value")
+  finalBidValue        Decimal     @db.Decimal(18, 2) @map("final_bid_value")
+  bidTimestamp         DateTime    @map("bid_timestamp")
+  rankingPosition      Int         @map("ranking_position")
+  participationStatus  String      @map("participation_status")
+  disputeResult        String      @map("dispute_result")
+  isWinningBid         Boolean     @default(false) @map("is_winning_bid")
+  officialSourceDocUrl String      @map("official_source_doc_url")
+
+  procurement          Procurement @relation(fields: [procurementId], references: [id], onDelete: Cascade)
+  company              Company     @relation(fields: [companyId], references: [id])
+
+  @@map("procurement_bids")
+}
+
+// 7. procurement_events
+model ProcurementEvent {
+  id              String      @id @default(uuid())
+  procurementId   String      @map("procurement_id")
+  eventType       String      @map("event_type")
+  description     String
+  occurredAt      DateTime    @map("occurred_at")
+  officialDocUrl  String?     @map("official_doc_url")
+
+  procurement     Procurement @relation(fields: [procurementId], references: [id], onDelete: Cascade)
+
+  @@map("procurement_events")
+}
+
+// 8. contracts
+model Contract {
+  id                   String               @id @default(uuid())
+  contractNumber       String               @unique @map("contract_number")
+  processNumber        String               @map("process_number")
+  procurementId        String?              @map("procurement_id")
+  companyId            String               @map("company_id")
+  secretariat          String
+  objectDescription    String               @map("object_description")
+  signedAt             DateTime             @map("signed_at")
+  startDate            DateTime             @map("start_date")
+  originalEndDate      DateTime             @map("original_end_date")
+  currentEndDate       DateTime             @map("current_end_date")
+  initialValue         Decimal              @db.Decimal(18, 2) @map("initial_value")
+  currentValueAfterAdd Decimal              @db.Decimal(18, 2) @map("current_value_after_add")
+  committedValue       Decimal              @db.Decimal(18, 2) @map("committed_value") // Valor empenhado
+  paidValue            Decimal              @db.Decimal(18, 2) @map("paid_value")      // Valor efetivamente pago
+  attentionScore       Int                  @default(0) @map("attention_score")
+  officialContractUrl  String               @map("official_contract_url")
+  isDemoData           Boolean              @default(false) @map("is_demo_data")
+  lastSyncedAt         DateTime             @map("last_synced_at")
+
+  procurement          Procurement?         @relation(fields: [procurementId], references: [id])
+  company              Company              @relation(fields: [companyId], references: [id])
+  amendments           ContractAmendment[]
+  occurrences          ContractOccurrence[]
+  publicWorks          PublicWork[]
+
+  @@map("contracts")
+}
+
+// 9. contract_amendments
+model ContractAmendment {
+  id                String   @id @default(uuid())
+  contractId        String   @map("contract_id")
+  amendmentNumber   String   @map("amendment_number")
+  amendmentType     String   @map("amendment_type") // Valor, Prazo, Valor e Prazo
+  valueDelta        Decimal? @db.Decimal(18, 2) @map("value_delta")
+  daysExtended      Int?     @map("days_extended")
+  justification     String
+  publishedAt       DateTime @map("published_at")
+  officialDocUrl    String   @map("official_doc_url")
+
+  contract          Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@map("contract_amendments")
+}
+
+// 10. contract_occurrences
+model ContractOccurrence {
+  id                  String             @id @default(uuid())
+  contractId          String             @map("contract_id")
+  companyId           String             @map("company_id")
+  category            OccurrenceCategory
+  indicatorCode       Int                @map("indicator_code") // 1 a 10 conforme Seção 10.1
+  title               String
+  description         String
+  weightPoints        Int                @map("weight_points")
+  sourceName          String             @map("source_name")
+  evidenceDocumentUrl String             @map("evidence_document_url")
+  registeredAt        DateTime           @map("registered_at")
+
+  contract            Contract           @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  company             Company            @relation(fields: [companyId], references: [id])
+
+  @@map("contract_occurrences")
+}
+
+// 11. public_works (Obras públicas com atraso documentado 2021-2026)
+model PublicWork {
+  id                     String       @id @default(uuid())
+  officialWorkCode       String       @unique @map("official_work_code")
+  name                   String
+  description            String
+  addressLocation        String       @map("address_location")
+  subprefecture          String
+  secretariat            String
+  companyId              String       @map("company_id")
+  contractId             String       @map("contract_id")
+  adminProcessNumber     String       @map("admin_process_number")
+
+  // Cronograma (Seção 9.1)
+  plannedStartDate       DateTime     @map("planned_start_date")
+  actualStartDate        DateTime?    @map("actual_start_date")
+  expectedCompletionYear Int          @map("expected_completion_year")
+  contractualEndDate     DateTime     @map("contractual_end_date")
+  updatedEndDate         DateTime     @map("updated_end_date")
+  currentStatus          String       @map("current_status")
+  delayMonthsCalculated  Int          @map("delay_months_calculated")
+  officialJustification  String?      @map("official_justification")
+
+  // Custos e Execução Separada (Seção 9.1 e Regra 10)
+  initialBudget          Decimal      @db.Decimal(18, 2) @map("initial_budget")
+  contractedAmount       Decimal      @db.Decimal(18, 2) @map("contracted_amount")
+  updatedAmountAfterAdd  Decimal      @db.Decimal(18, 2) @map("updated_amount_after_add")
+  committedAmount        Decimal      @db.Decimal(18, 2) @map("committed_amount")
+  paidAmount             Decimal      @db.Decimal(18, 2) @map("paid_amount")
+  physicalExecutionValue Decimal?     @db.Decimal(18, 2) @map("physical_execution_value")
+  financialExecutionPct  Decimal?     @db.Decimal(5, 2)  @map("financial_execution_pct")
+  physicalExecutionPct   Decimal?     @db.Decimal(5, 2)  @map("physical_execution_pct")
+
+  officialSourceUrl      String       @map("official_source_url")
+  isDemoData             Boolean      @default(false) @map("is_demo_data")
+  lastSyncedAt           DateTime     @map("last_synced_at")
+
+  company                Company      @relation(fields: [companyId], references: [id])
+  contract               Contract     @relation(fields: [contractId], references: [id])
+  updates                WorkUpdate[]
+  complaints             Complaint[]
+
+  @@map("public_works")
+}
+
+// 12. work_updates
+model WorkUpdate {
+  id                  String     @id @default(uuid())
+  publicWorkId        String     @map("public_work_id")
+  updateType          String     @map("update_type")
+  summary             String
+  physicalPctRecorded Decimal?   @db.Decimal(5, 2) @map("physical_pct_recorded")
+  recordedAt          DateTime   @map("recorded_at")
+  officialDocUrl      String     @map("official_doc_url")
+
+  publicWork          PublicWork @relation(fields: [publicWorkId], references: [id], onDelete: Cascade)
+
+  @@map("work_updates")
+}
+
+// 13. public_reports
+model PublicReport {
+  id              String       @id @default(uuid())
+  slug            String       @unique
+  procurementId   String?      @map("procurement_id")
+  reportType      String       @map("report_type")
+  snapshotPayload Json         @map("snapshot_payload")
+  generatedAt     DateTime     @default(now()) @map("generated_at")
+
+  procurement     Procurement? @relation(fields: [procurementId], references: [id])
+
+  @@map("public_reports")
+}
+
+// 14. company_votes
+model CompanyVote {
+  id              String          @id @default(uuid())
+  userId          String          @map("user_id")
+  companyId       String          @map("company_id")
+  evaluationCycle String          @map("evaluation_cycle") // Ex: "2026-S2"
+  voteOption      CompanyVoteType @map("vote_option")
+  previousHistory Json?           @map("previous_history")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company         Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId, evaluationCycle]) // Impede duplicidade de votos (Regra 16)
+  @@map("company_votes")
+}
+
+// 15. procurement_votes
+model ProcurementVote {
+  id              String              @id @default(uuid())
+  userId          String              @map("user_id")
+  procurementId   String              @map("procurement_id")
+  voteOption      ProcurementVoteType @map("vote_option")
+  previousHistory Json?               @map("previous_history")
+  createdAt       DateTime            @default(now()) @map("created_at")
+  updatedAt       DateTime            @updatedAt @map("updated_at")
+
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  procurement     Procurement         @relation(fields: [procurementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, procurementId]) // 1 voto válido por cidadão verificado por contratação
+  @@map("procurement_votes")
+}
+
+// 16. comments
+model Comment {
+  id               String           @id @default(uuid())
+  userId           String           @map("user_id")
+  companyId        String?          @map("company_id")
+  procurementId    String?          @map("procurement_id")
+  content          String
+  moderationStatus ModerationStatus @default(PENDING_REVIEW) @map("moderation_status")
+  moderationReason String?          @map("moderation_reason")
+  createdAt        DateTime         @default(now()) @map("created_at")
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company          Company?         @relation(fields: [companyId], references: [id])
+  procurement      Procurement?     @relation(fields: [procurementId], references: [id])
+
+  @@map("comments")
+}
+
+// 17. complaints (Manifestações e relatos sobre obras atrasadas - Seção 9.3)
+model Complaint {
+  id               String           @id @default(uuid())
+  userId           String?          @map("user_id")
+  publicWorkId     String           @map("public_work_id")
+  category         String           // Abandono, Paralisação, Qualidade, Ausência de trabalhadores, Divergência de dados
+  description      String
+  photoUrls        String[]         @map("photo_urls")
+  moderationStatus ModerationStatus @default(PENDING_REVIEW) @map("moderation_status")
+  acknowledgedNonOfficialDisclaimer Boolean @default(true) @map("acknowledged_non_official_disclaimer")
+  createdAt        DateTime         @default(now()) @map("created_at")
+
+  user             User?            @relation(fields: [userId], references: [id])
+  publicWork       PublicWork       @relation(fields: [publicWorkId], references: [id], onDelete: Cascade)
+
+  @@map("complaints")
+}
+
+// 18. data_sources
+model DataSource {
+  id                  String               @id @default(uuid())
+  code                String               @unique // PNCP, TCMSP, OBRAS_ABERTAS, DADOS_SP, TRANSPARENCIA_SP, CEIS_CNEP
+  name                String
+  officialUrl         String               @map("official_url")
+  apiDocumentationUrl String?              @map("api_documentation_url")
+  refreshFrequency    String               @map("refresh_frequency")
+  lastSuccessfulSync  DateTime?            @map("last_successful_sync")
+  currentStatus       String               @map("current_status")
+
+  procurements        Procurement[]
+  syncLogs            SynchronizationLog[]
+
+  @@map("data_sources")
+}
+
+// 19. synchronization_logs
+model SynchronizationLog {
+  id                  String     @id @default(uuid())
+  dataSourceId        String     @map("data_source_id")
+  startedAt           DateTime   @map("started_at")
+  finishedAt          DateTime?  @map("finished_at")
+  sourceLastUpdatedAt DateTime?  @map("source_last_updated_at")
+  recordsProcessed    Int        @default(0) @map("records_processed")
+  status              String     // SUCCESS, PARTIAL_WARNING, FAILED_SOURCE_UNAVAILABLE
+  errorMessage        String?    @map("error_message")
+
+  dataSource          DataSource @relation(fields: [dataSourceId], references: [id])
+
+  @@map("synchronization_logs")
+}
+
+// 20a. ranking_snapshots
+model RankingSnapshot {
+  id              String   @id @default(uuid())
+  rankingType     String   @map("ranking_type") // POPULAR_COMPANY, ATTENTION_CONTRACTS
+  algorithmVersion String  @map("algorithm_version")
+  snapshotData    Json     @map("snapshot_data")
+  generatedAt     DateTime @default(now()) @map("generated_at")
+
+  @@map("ranking_snapshots")
+}
+
+// 20b. audit_logs
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorUserId String?  @map("actor_user_id")
+  actionType  String   @map("action_type")
+  targetTable String   @map("target_table")
+  targetId    String   @map("target_id")
+  justification String
+  diffPayload Json?    @map("diff_payload")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  actor       User?    @relation(fields: [actorUserId], references: [id])
+
+  @@map("audit_logs")
+}
