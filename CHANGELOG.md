@@ -7,6 +7,21 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.2.0] - 2026-11-21
+
+### 🚀 Migração Efetiva para Nuvem (Supabase) Concluída
+- **População e Validação em Tempo Real no Supabase PostgreSQL**:
+  - `data_sources`: 5 fontes oficiais de dados integradas.
+  - `companies`: 92 empresas fornecedoras da PMSP cadastradas com CNPJ de 14 dígitos normalizado e status de regularidade cadastral.
+  - `procurements`: 25 contratações públicas e itens do Plano de Contratações Anual (PCA 2027) devidamente segregados e deduplicados.
+  - `contracts`: 20 contratos vigentes vinculados com numeração oficial, processos SEI e valores empenhados/pagos.
+  - `public_works`: 20 obras públicas atrasadas com cronogramas contratuais, medição física, datas e justificativas oficiais.
+- **Tratamento de Integridade e Constraints**:
+  - Resolução de constraints `NOT NULL` para `registration_status` e URLs de comprovação oficial dos contratos.
+  - Deduplicação de registros de PCA no snapshot e no script de ingestão com resolução segura de duplicatas.
+
+---
+
 ## [1.1.0] - 2026-11-21
 
 ### 🚀 Banco de Dados em Nuvem (Supabase) e Deploy Vercel

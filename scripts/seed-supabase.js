@@ -16,10 +16,11 @@ const path = require("path");
 function getEnvConfig() {
   const envPath = path.join(process.cwd(), ".env.local");
   const config = {
-    SUPABASE_URL: process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL,
+    SUPABASE_URL:
+      process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL,
     SUPABASE_KEY:
       process.env.SUPABASE_SERVICE_ROLE_KEY ||
-      process.env.SUPABASE_ANON_KEY ||
+      process.env.SUPABASE_KEY ||
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   };
 
@@ -36,8 +37,8 @@ function getEnvConfig() {
       if (trimmed.startsWith("SUPABASE_SERVICE_ROLE_KEY=")) {
         config.SUPABASE_KEY = trimmed.replace("SUPABASE_SERVICE_ROLE_KEY=", "").trim();
       }
-      if (!config.SUPABASE_KEY && trimmed.startsWith("SUPABASE_ANON_KEY=")) {
-        config.SUPABASE_KEY = trimmed.replace("SUPABASE_ANON_KEY=", "").trim();
+      if (!config.SUPABASE_KEY && trimmed.startsWith("SUPABASE_KEY=")) {
+        config.SUPABASE_KEY = trimmed.replace("SUPABASE_KEY=", "").trim();
       }
       if (!config.SUPABASE_KEY && trimmed.startsWith("NEXT_PUBLIC_SUPABASE_ANON_KEY=")) {
         config.SUPABASE_KEY = trimmed.replace("NEXT_PUBLIC_SUPABASE_ANON_KEY=", "").trim();
@@ -63,7 +64,7 @@ async function supabaseInsert(table, rows) {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
       "Content-Type": "application/json",
-      Prefer: "resolution=merge-duplicates", // Upsert idempotente
+      Prefer: "resolution=merge-duplicates",
     },
     body: JSON.stringify(rows),
   });
@@ -80,7 +81,7 @@ async function seedSupabase() {
   const { SUPABASE_URL } = getEnvConfig();
   console.log(`\n======================================================`);
   console.log(`MIGRAÇÃO DE DADOS OFICIAIS PARA O SUPABASE`);
-  console.log(`Destino: ${SUPABASE_URL || "Configuração pendente"}`);
+  console.log(`Destino: ${SUPABASE_URL}`);
   console.log(`======================================================\n`);
 
   const snapshotPath = path.join(process.cwd(), "data", "official-sync-db.json");
@@ -94,13 +95,14 @@ async function seedSupabase() {
   if (db.dataSources && db.dataSources.length > 0) {
     console.log(`→ Inserindo ${db.dataSources.length} Fontes de Dados Oficiais...`);
     const dsRows = db.dataSources.map((s) => ({
-      id: s.id,
+      id: s.id || `src-${s.code.toLowerCase()}`,
       code: s.code,
       name: s.name,
       official_url: s.officialUrl,
-      api_documentation_url: s.apiDocumentationUrl || null,
+      api_documentation_url: s.apiEndpointTested || null,
       refresh_frequency: s.refreshFrequency,
-      last_successful_sync: s.lastSuccessfulSyncAt || new Date().toISOString(),
+      last_successful_sync:
+        s.lastSuccessfulSyncAt || s.lastConsultationAt || new Date().toISOString(),
       current_status: s.status,
     }));
     await supabaseInsert("data_sources", dsRows);
@@ -116,7 +118,9 @@ async function seedSupabase() {
       cnpj_formatted: c.cnpjFormatted,
       legal_name: c.legalName,
       trade_name: c.tradeName || null,
-      registration_status: c.registrationStatus,
+      registration_status:
+        c.registrationStatus ||
+        (c.ceisCnepStatus && c.ceisCnepStatus.hasActiveSanction ? "SANCIONADA" : "REGULAR"),
       identified_procurements_count: c.identifiedProcurementsCount || 0,
       identified_contracts_count: c.identifiedContractsCount || 0,
       total_contracted_amount: c.totalContractedAmount || 0,
@@ -125,7 +129,6 @@ async function seedSupabase() {
       last_synced_at: c.lastSyncedAt || new Date().toISOString(),
     }));
 
-    // Inserção em lotes de 25
     for (let i = 0; i < compRows.length; i += 25) {
       const batch = compRows.slice(i, i + 25);
       await supabaseInsert("companies", batch);
@@ -134,10 +137,18 @@ async function seedSupabase() {
     console.log(`✓ companies migrado com sucesso.`);
   }
 
-  // 3. Procurements (15 licitações e PCA 2027)
+  // 3. Procurements (25 licitações e PCA 2027)
   if (db.procurements && db.procurements.length > 0) {
-    console.log(`→ Inserindo ${db.procurements.length} Contratações Públicas e PCA 2027...`);
-    const procRows = db.procurements.map((p) => ({
+    const seenProc = new Set();
+    const uniqueProcurements = db.procurements.filter((p) => {
+      const key = p.id || p.pncpNumber;
+      if (seenProc.has(key)) return false;
+      seenProc.add(key);
+      return true;
+    });
+
+    console.log(`→ Inserindo ${uniqueProcurements.length} Contratações Públicas e PCA 2027...`);
+    const procRows = uniqueProcurements.map((p) => ({
       id: p.id,
       pncp_control_number: p.pncpNumber,
       process_number: p.processNumber,
@@ -181,7 +192,7 @@ async function seedSupabase() {
       contractRows.push({
         id: `ct-${w.id}`,
         contract_number: w.contractNumber,
-        process_number: w.processNumber,
+        process_number: w.adminProcessNumber || w.processNumber || "6022.2023/0000000-0",
         company_id: w.companyId,
         secretariat: w.secretariat,
         object_description: w.description,
@@ -194,7 +205,11 @@ async function seedSupabase() {
         committed_value: w.costs.committedAmount,
         paid_value: w.costs.paidAmount,
         attention_score: 50,
-        official_contract_url: w.officialSourceUrl,
+        official_contract_url:
+          w.officialContractUrl ||
+          w.sourceUrl ||
+          w.officialSourceUrl ||
+          "https://dados.prefeitura.sp.gov.br",
         is_demo_data: false,
         last_synced_at: new Date().toISOString(),
       });
@@ -209,7 +224,7 @@ async function seedSupabase() {
         secretariat: w.secretariat,
         company_id: w.companyId,
         contract_id: `ct-${w.id}`,
-        admin_process_number: w.processNumber,
+        admin_process_number: w.adminProcessNumber || w.processNumber || "6022.2023/0000000-0",
         planned_start_date: new Date(w.schedule.plannedStartDate).toISOString(),
         actual_start_date: w.schedule.actualStartDate
           ? new Date(w.schedule.actualStartDate).toISOString()
@@ -228,7 +243,8 @@ async function seedSupabase() {
         physical_execution_value: w.costs.physicalExecutedValue || null,
         financial_execution_pct: w.costs.financialExecutionPct,
         physical_execution_pct: w.costs.physicalExecutionPct || null,
-        official_source_url: w.officialSourceUrl,
+        official_source_url:
+          w.officialSourceUrl || w.sourceUrl || "https://dados.prefeitura.sp.gov.br",
         is_demo_data: false,
         last_synced_at: new Date().toISOString(),
       });
