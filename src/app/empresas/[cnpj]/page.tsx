@@ -35,6 +35,8 @@ import {
   getClientCitizenSession,
   StoredCitizenSession,
 } from "@/lib/citizen-auth/client-session";
+import { notifyVoteRegistered } from "@/lib/pwa/notifications";
+import { enqueueOfflineAction } from "@/lib/pwa/offline-queue";
 
 export default function EmpresaProfilePage() {
   const params = useParams<{ cnpj: string }>();
@@ -160,6 +162,10 @@ export default function EmpresaProfilePage() {
       if (res.ok) {
         setVoteSaved(true);
         setVoteFeedback(data.message);
+        notifyVoteRegistered(
+          company.tradeName || company.legalName,
+          userVote === "RECOMMEND" ? "Recomendo" : userVote === "DO_NOT_RECOMMEND" ? "Não Recomendo" : "Sem Opinião"
+        );
         if (data.stats) {
           setCompanyVotes((prev) => ({
             ...prev,
@@ -180,7 +186,23 @@ export default function EmpresaProfilePage() {
         setVoteFeedback(data.error || "Erro ao registrar voto.");
       }
     } catch {
-      setVoteFeedback("Erro de conexão ao salvar voto.");
+      // Fallback em caso de indisponibilidade de rede (Modo Offline PWA)
+      try {
+        await enqueueOfflineAction({
+          type: "VOTE_COMPANY",
+          payload: {
+            citizenToken: citizenSession.citizenToken,
+            companyCnpj: company.cnpjNormalized,
+            voteType: userVote,
+            justification: commentText,
+          },
+        });
+        setVoteSaved(true);
+        setVoteFeedback("Modo Offline: Seu voto foi armazenado no dispositivo e será sincronizado quando a conexão retornar.");
+        notifyVoteRegistered(company.tradeName || company.legalName, "Voto Salvo Offline");
+      } catch {
+        setVoteFeedback("Erro de conexão ao salvar voto.");
+      }
     } finally {
       setVoteLoading(false);
     }

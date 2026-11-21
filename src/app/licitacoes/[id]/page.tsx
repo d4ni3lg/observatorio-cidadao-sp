@@ -31,6 +31,8 @@ import {
   getClientCitizenSession,
   StoredCitizenSession,
 } from "@/lib/citizen-auth/client-session";
+import { notifyVoteRegistered } from "@/lib/pwa/notifications";
+import { enqueueOfflineAction } from "@/lib/pwa/offline-queue";
 
 export default function LicitacaoDetailPage() {
   const params = useParams<{ id: string }>();
@@ -117,6 +119,10 @@ export default function LicitacaoDetailPage() {
       if (res.ok) {
         setVoteSubmitted(true);
         setVoteFeedback(data.message);
+        notifyVoteRegistered(
+          procurement.simplifiedTitle,
+          selectedVote === "SUPPORT" ? "Apoio" : selectedVote === "OPPOSE" ? "Não Apoio" : "Necessita Esclarecimento"
+        );
         if (data.stats) {
           setVoteStats({
             totalVotes: data.stats.totalVotes,
@@ -132,7 +138,23 @@ export default function LicitacaoDetailPage() {
         setVoteFeedback(data.error || "Erro ao registrar voto.");
       }
     } catch {
-      setVoteFeedback("Erro de conexão ao salvar voto.");
+      // Fallback em caso de indisponibilidade de rede (Modo Offline PWA)
+      try {
+        await enqueueOfflineAction({
+          type: "VOTE_PROCUREMENT",
+          payload: {
+            citizenToken: citizenSession.citizenToken,
+            procurementId: procurement.id,
+            voteType: selectedVote,
+            justification,
+          },
+        });
+        setVoteSubmitted(true);
+        setVoteFeedback("Modo Offline: Seu voto foi armazenado no dispositivo e será sincronizado quando a conexão retornar.");
+        notifyVoteRegistered(procurement.simplifiedTitle, "Voto Salvo Offline");
+      } catch {
+        setVoteFeedback("Erro de conexão ao salvar voto.");
+      }
     } finally {
       setVoteLoading(false);
     }

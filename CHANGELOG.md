@@ -7,6 +7,25 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.5.0] - 2026-11-21
+
+### 📱 Progressive Web App (PWA), Modo Offline, Farol Apagado & Notificações Nativas
+- **Web App Manifest (`src/app/manifest.ts`)**: Suporte a instalação nativa standalone no Android, iOS e Windows com ícone vetorial de alta definição e cores paulistas.
+- **Service Worker Nativo (`public/sw.js`)**: Cache-First para recursos estáticos, Stale-While-Revalidate para dados públicos e contingência offline para navegação.
+- **Modo Offline & Conceito "Farol Apagado"**:
+  - Quando offline (ou na simulação), o logotipo do **Farol Cidadão** desliga os feixes luminosos e assume tons de contingência apagada.
+  - Notificação fixa no topo (`OfflineBanner.tsx`) avisando sobre o funcionamento local e salvamento seguro de ações.
+  - Tela de contingência offline (`/offline`) com atalhos para os módulos pré-carregados.
+  - Fila local com **IndexedDB** (`offline-queue.ts`) que retém votos realizados offline e os sincroniza automaticamente ao restaurar a conexão.
+- **Central de Alertas & Notificações Nativas**:
+  - Disparo de notificações nativas do sistema operacional com vibração e som para **Voto Registrado** (com hash HMAC) e **Conta Cidadã Ativada**.
+  - Modal da Central de Alertas (`NotificationCenterModal.tsx`) acessível pela barra de navegação com teste instantâneo de alertas de editais, obras e sugestões de votação.
+- **Detecção de Novas Versões & Prompt de Instalação**:
+  - `UpdateToast.tsx` notifica o usuário quando há um novo build disponível com botão de recarregamento sem atrito (`SKIP_WAITING`).
+  - `InstallPrompt.tsx` oferece instalação do app em um toque.
+
+---
+
 ## [1.4.1] - 2026-11-21
 
 ### 🔒 Ocultação de Credenciais e Proteção Visual do Painel Administrativo

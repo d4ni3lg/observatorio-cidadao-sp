@@ -23,6 +23,7 @@ import {
   clearClientCitizenSession,
   StoredCitizenSession,
 } from "@/lib/citizen-auth/client-session";
+import { notifyAccountActivated } from "@/lib/pwa/notifications";
 
 export default function ContaCidadaPage() {
   const [session, setSession] = useState<StoredCitizenSession | null>(null);
@@ -136,6 +137,7 @@ export default function ContaCidadaPage() {
       saveClientCitizenSession(newSession);
       setSession(newSession);
       setSuccessMsg("Identidade cívica verificada! Você agora pode votar com regra de 1 CPF = 1 voto.");
+      notifyAccountActivated(newSession.pseudonym);
       fetchVotes(newSession.citizenToken);
     } catch (err: any) {
       setErrorMsg("Falha na comunicação segura com o servidor de verificação.");

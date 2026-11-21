@@ -16,8 +16,10 @@ import {
   TrendingDown,
   HelpCircle,
   Info,
+  Bell,
 } from "lucide-react";
 import { Logo } from "./Logo";
+import { NotificationCenterModal } from "@/components/pwa/NotificationCenterModal";
 
 const NAV_ITEMS = [
   { label: "Início", href: "/", icon: null },
@@ -32,6 +34,7 @@ const NAV_ITEMS = [
 export function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [alertsOpen, setAlertsOpen] = useState(false);
 
   // Fecha o menu mobile automaticamente ao trocar de rota
   useEffect(() => {
@@ -108,8 +111,17 @@ export function Header() {
             })}
           </nav>
 
-          {/* Acesso à conta do cidadão */}
+          {/* Acesso à conta e alertas cívicos */}
           <div className="hidden md:flex items-center gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setAlertsOpen(true)}
+              className="px-3 py-2 text-xs font-semibold text-neutral-700 hover:text-neutral-950 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition-colors flex items-center gap-1.5"
+              title="Central de Alertas Cívicos e Notificações Nativas"
+            >
+              <Bell className="w-3.5 h-3.5 text-red-600" />
+              <span>Alertas</span>
+            </button>
             <Link
               href="/conta"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold bg-red-700 hover:bg-red-800 text-white transition-all shadow-sm border border-red-800 active:scale-95"
@@ -119,8 +131,17 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Botão Mobile Hamburger */}
+          {/* Botões Mobile (Entrar + Alertas + Hamburger) */}
           <div className="flex xl:hidden items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setAlertsOpen(true)}
+              className="p-2 rounded-lg text-neutral-700 hover:bg-neutral-100 border border-neutral-300 flex items-center justify-center"
+              title="Alertas Cívicos"
+              aria-label="Abrir Alertas Cívicos"
+            >
+              <Bell className="w-4 h-4 text-red-600" />
+            </button>
             <Link
               href="/conta"
               className="inline-flex md:hidden items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold bg-red-700 text-white shadow-sm"
@@ -173,6 +194,17 @@ export function Header() {
             })}
 
             <div className="pt-4 mt-4 border-t border-neutral-200 space-y-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  setAlertsOpen(true);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-neutral-300 text-neutral-800 hover:bg-neutral-50"
+              >
+                <Bell className="w-4 h-4 text-red-600" />
+                Central de Alertas & Notificações Nativas
+              </button>
               <Link
                 href="/conta"
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold bg-red-700 text-white shadow-sm"
@@ -184,6 +216,9 @@ export function Header() {
           </div>
         </div>
       )}
+
+      {/* Modal da Central de Notificações Cívicas */}
+      <NotificationCenterModal isOpen={alertsOpen} onClose={() => setAlertsOpen(false)} />
     </header>
   );
 }
