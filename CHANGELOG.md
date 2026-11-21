@@ -7,6 +7,15 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.3.1] - 2026-11-21
+
+### 🏮 Redesign do Logotipo Oficial: Farol Cidadão da Transparência
+- **Novo Símbolo e Conceito**: Criação de um logotipo moderno e estilizado com o **Farol da Transparência** iluminando os gastos públicos de São Paulo.
+- **Geometria e Cores Paulistas**: Torre do farol com as faixas paulistas (preto nobre, vermelho bandeirante e branco puro), feixe de luz dourado projetado e squircle escuro refinado.
+- **Favicon SVG Nativo (`src/app/icon.svg`)**: Adicionado ícone do farol vetorial de alta nitidez renderizado automaticamente na aba de todos os navegadores e dispositivos móveis.
+
+---
+
 ## [1.3.0] - 2026-11-21
 
 ### 🎨 Nova Identidade Visual Paulista, Mobile de Alta Performance e Blindagem de Segurança

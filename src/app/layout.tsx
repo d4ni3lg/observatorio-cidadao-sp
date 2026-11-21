@@ -31,11 +31,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Observatório Cidadão de São Paulo | Fiscalização e Controle Social",
+  title: "Farol Cidadão de São Paulo | Observatório de Transparência e Controle Social",
   description:
-    "Plataforma cívica independente de transparência pública, participação popular auditável e acompanhamento de editais, empresas e obras públicas do Município de São Paulo.",
+    "Farol Cidadão de São Paulo: plataforma cívica independente de iluminação dos gastos públicos, participação popular auditável e acompanhamento de editais, empresas e obras públicas do Município de São Paulo.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.svg",
   },
 };
 
