@@ -1,7 +1,7 @@
 -- ============================================================================
 -- OBSERVATÓRIO CIDADÃO DE SÃO PAULO
 -- Schema Oficial PostgreSQL para o Supabase (Seção 13.1)
--- 20 Entidades Relacionais com Chaves Primárias, Estrangeiras e Índices
+-- 20 Entidades Relacionais com Chaves Primárias, RLS e Boas Práticas do Supabase
 -- ============================================================================
 
 -- Habilitar extensão para geração de UUID
@@ -312,8 +312,48 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
--- Visualizações de Estatísticas de Votos Agregados
-CREATE OR REPLACE VIEW view_company_vote_stats AS
+-- ============================================================================
+-- HABILITAR ROW LEVEL SECURITY (RLS) E POLÍTICAS DE ACESSO (BOAS PRÁTICAS SUPABASE)
+-- ============================================================================
+
+ALTER TABLE companies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE procurements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE procurement_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE procurement_bids ENABLE ROW LEVEL SECURITY;
+ALTER TABLE procurement_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contracts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contract_amendments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contract_occurrences ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public_works ENABLE ROW LEVEL SECURITY;
+ALTER TABLE work_updates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE data_sources ENABLE ROW LEVEL SECURITY;
+ALTER TABLE company_votes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE procurement_votes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE complaints ENABLE ROW LEVEL SECURITY;
+
+-- Políticas de Leitura Pública (Plataforma Cívica Aberta)
+CREATE POLICY "Public read access for companies" ON companies FOR SELECT USING (true);
+CREATE POLICY "Public read access for procurements" ON procurements FOR SELECT USING (true);
+CREATE POLICY "Public read access for procurement_documents" ON procurement_documents FOR SELECT USING (true);
+CREATE POLICY "Public read access for procurement_bids" ON procurement_bids FOR SELECT USING (true);
+CREATE POLICY "Public read access for procurement_events" ON procurement_events FOR SELECT USING (true);
+CREATE POLICY "Public read access for contracts" ON contracts FOR SELECT USING (true);
+CREATE POLICY "Public read access for contract_amendments" ON contract_amendments FOR SELECT USING (true);
+CREATE POLICY "Public read access for contract_occurrences" ON contract_occurrences FOR SELECT USING (true);
+CREATE POLICY "Public read access for public_works" ON public_works FOR SELECT USING (true);
+CREATE POLICY "Public read access for work_updates" ON work_updates FOR SELECT USING (true);
+CREATE POLICY "Public read access for data_sources" ON data_sources FOR SELECT USING (true);
+CREATE POLICY "Public read access for company_votes" ON company_votes FOR SELECT USING (true);
+CREATE POLICY "Public insert access for company_votes" ON company_votes FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public read access for procurement_votes" ON procurement_votes FOR SELECT USING (true);
+CREATE POLICY "Public insert access for procurement_votes" ON procurement_votes FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public read access for approved comments" ON comments FOR SELECT USING (moderation_status = 'APPROVED');
+CREATE POLICY "Public insert access for comments" ON comments FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert access for complaints" ON complaints FOR INSERT WITH CHECK (true);
+
+-- Visualizações de Estatísticas de Votos Agregados com security_invoker = true
+CREATE OR REPLACE VIEW view_company_vote_stats WITH (security_invoker = true) AS
 SELECT 
     company_cnpj,
     COUNT(*) AS total_votes,
@@ -323,7 +363,7 @@ SELECT
 FROM company_votes
 GROUP BY company_cnpj;
 
-CREATE OR REPLACE VIEW view_procurement_vote_stats AS
+CREATE OR REPLACE VIEW view_procurement_vote_stats WITH (security_invoker = true) AS
 SELECT 
     procurement_id,
     COUNT(*) AS total_votes,
